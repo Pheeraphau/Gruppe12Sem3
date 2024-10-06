@@ -1,0 +1,50 @@
+﻿@model WebApplication1.Models.PositionModel
+
+<h2>Registrer en Posisjon</h2>
+
+<form asp-action="CorrectMap" method="post">
+    <div class="form-group">
+        <label for="Latitude">Latitude</label>
+        <input type="text" id="Latitude" name="Latitude" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="Longitude">Longitude</label>
+        <input type="text" id="Longitude" name="Longitude" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea id="Description" name="Description" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div id="map" style="height: 400px;"></div>
+
+@section Scripts {
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Handle map click event
+        map.on('click', function(e) {
+            // Get clicked position
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+
+            // Set the latitude and longitude fields in the form
+            document.getElementById('Latitude').value = lat;
+            document.getElementById('Longitude').value = lng;
+
+            // Add marker to the map
+            L.marker([lat, lng]).addTo(map);
+        });
+    </script>
+}
