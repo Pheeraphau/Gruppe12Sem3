@@ -1,13 +1,17 @@
 ﻿@model WebApplication1.Models.AreaChange
 <form asp-action="RegisterAreaChange" method="post">
-    <label for="description">Description:</label>
-    <input type="text" id="description" name="description" required />
     <input type="hidden" id="geoJsonInput" name="geoJson" />
-    <button type="submit">Submit</button>
+    <div>
+        <label for="description">Change Description:</label>
+        <textarea id="description" name="Description" class="form-control"></textarea>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Submit</button>
 </form>
 <div id="map" style="height: 400px;"></div>
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script>

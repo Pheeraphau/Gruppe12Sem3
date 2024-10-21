@@ -7,25 +7,25 @@
 <h2>Registrer en Posisjon</h2>
 
 <form asp-action="CorrectMap" method="post">
-    <div class="form-group">
+    <div class="form-group" style="margin-bottom: 15px;">
         <label for="Latitude">Latitude</label>
         <input type="text" id="Latitude" name="Latitude" class="form-control" readonly />
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="margin-bottom: 15px;">
         <label for="Longitude">Longitude</label>
         <input type="text" id="Longitude" name="Longitude" class="form-control" readonly />
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="margin-bottom: 20px;">
         <label for="Description">Description</label>
         <textarea id="Description" name="Description" class="form-control"></textarea>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Submit</button>
 </form>
 
-<div id="map" style="height: 400px;"></div>
+<div id="map" style="height: 400px; margin-top: 20px;"></div>
 
 @section Scripts {
     <script>
@@ -38,7 +38,7 @@
         }).addTo(map);
 
         // Handle map click event
-        map.on('click', function(e) {
+        map.on('click', function (e) {
             // Get clicked position
             var lat = e.latlng.lat;
             var lng = e.latlng.lng;
