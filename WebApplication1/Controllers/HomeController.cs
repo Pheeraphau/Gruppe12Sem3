@@ -1,105 +1,85 @@
+using WebApplication1.Models;
+using WebApplication1.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IKommuneInfoService _kommuneInfoService;
+        private readonly IStedsnavnService _stedsnavnService;
 
-        private static List<PositionModel> positions = new List<PositionModel>();
-
-        private static List<AreaChange> changes = new List<AreaChange>();
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IKommuneInfoService kommuneInfoService, IStedsnavnService stedsnavnService)
         {
             _logger = logger;
+            _kommuneInfoService = kommuneInfoService;
+            _stedsnavnService = stedsnavnService;
         }
 
-
-
-
-        [HttpGet]
-        public IActionResult CorrectionOverview()
-        {
-            return View(positions);
-        }
-
-        [HttpGet]
-        public IActionResult RegisterAreaChange()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        [HttpGet]
-        public IActionResult CorrectMap()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AreaChangeOverview()
-        {
-            return View(changes);
-        }
-
+        // Handles the search for KommuneInfo
         [HttpPost]
-        public IActionResult CorrectMap(PositionModel model)
+        public async Task<IActionResult> KommuneInfo(string kommuneNr)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(kommuneNr))
             {
-                positions.Add(model);
-
-                return View("CorrectionOverview", positions);
+                ViewData["Error"] = "Please enter a valid Kommune Number.";
+                return View("Index");
             }
 
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult RegisterAreaChange(string geoJson, string description)
-        {
-            var newChange = new AreaChange
+            var kommuneInfo = await _kommuneInfoService.GetKommuneInfoAsync(kommuneNr);
+            if (kommuneInfo != null)
             {
-                Id = Guid.NewGuid().ToString(),
-                GeoJson = geoJson,
-                Description = description
-            };
-
-            changes.Add(newChange);
-
-            return RedirectToAction("AreaChangeOverview");
+                var viewModel = new KommuneInfoViewModel
+                {
+                    Kommunenavn = kommuneInfo.Kommunenavn,
+                    Kommunenummer = kommuneInfo.Kommunenummer,
+                    Fylkesnavn = kommuneInfo.Fylkesnavn,
+                    SamiskForvaltningsomrade = kommuneInfo.SamiskForvaltningsomrade
+                };
+                return View("KommuneInfo", viewModel);
+            }
+            else
+            {
+                ViewData["Error"] = $"No results found for Kommune Number '{kommuneNr}'.";
+                return View("Index");
+            }
         }
 
-        [HttpGet]
-        public ViewResult RegistrationForm()
-        {
-            return View();
-        }
-
+        // Handles the search for Stedsnavn
         [HttpPost]
-        public ViewResult RegistrationForm(UserData userData)
+        public async Task<IActionResult> Stedsnavn(string searchTerm)
         {
-            return View("Overview", userData);
-        }
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                ViewData["Error"] = "Please enter a valid place name.";
+                return View("Index");
+            }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var stedsnavnResponse = await _stedsnavnService.GetStedsnavnAsync(searchTerm);
+            if (stedsnavnResponse?.Navn != null && stedsnavnResponse.Navn.Any())
+            {
+                var viewModel = stedsnavnResponse.Navn.Select(n => new StedsnavnViewModel
+                {
+                    Skrivemåte = n.Skrivemåte,
+                    Navneobjekttype = n.Navneobjekttype,
+                    Språk = n.Språk,
+                    Navnestatus = n.Navnestatus
+                }).ToList();
+
+                return View("Stedsnavn", viewModel);
+            }
+            else
+            {
+                ViewData["Error"] = $"No results found for '{searchTerm}'.";
+                return View("Index");
+            }
         }
     }
 }
