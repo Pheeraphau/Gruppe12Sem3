@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -8,17 +9,18 @@ namespace WebApplication1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+        //EF
+        private readonly ApplicationDbContext _context;
+
         private static List<PositionModel> positions = new List<PositionModel>();
 
         private static List<AreaChange> changes = new List<AreaChange>();
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
-
-
-
 
         [HttpGet]
         public IActionResult CorrectionOverview()
@@ -50,10 +52,12 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        // Display overview of area changes
         [HttpGet]
         public IActionResult AreaChangeOverview()
         {
-            return View(changes);
+            var changes_db = _context.GeoChanges.ToList();
+            return View(changes_db);
         }
 
         [HttpPost]
@@ -69,22 +73,38 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        // Handle form submission to register area change
         [HttpPost]
         public IActionResult RegisterAreaChange(string geoJson, string description)
         {
-            var newChange = new AreaChange
+            try
             {
-                Id = Guid.NewGuid().ToString(),
-                GeoJson = geoJson,
-                Description = description
-            };
+                if (string.IsNullOrEmpty(geoJson) || string.IsNullOrEmpty(description))
+                {
+                    return BadRequest("Invalid data");
+                }
 
-            changes.Add(newChange);
+                var newGeoChange = new GeoChange
+                {
+                    GeoJson = geoJson,
+                    Description = description
+                };
 
-            return RedirectToAction("AreaChangeOverview");
+                // Save to the database
+                _context.GeoChanges.Add(newGeoChange);
+                _context.SaveChanges();
+
+                // Redirect to the overview of changes
+                return RedirectToAction("AreaChangeOverview");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
+                throw;
+            }
         }
 
-        [HttpGet]
+            [HttpGet]
         public ViewResult RegistrationForm()
         {
             return View();
