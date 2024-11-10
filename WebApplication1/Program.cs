@@ -1,7 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Data; // Your namespace for ApplicationDbContext
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add the DbContext with MariaDB connection
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+
 
 var app = builder.Build();
 
