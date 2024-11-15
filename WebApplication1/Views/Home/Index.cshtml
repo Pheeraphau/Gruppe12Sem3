@@ -1,10 +1,75 @@
 ﻿@{
+    // Setter layouten for denne siden til å bruke standardlayouten som ligger i Views/Shared/_Layout.cshtml
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Setter tittelen på siden som vises i nettleserfanen
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Please register yourself</p>
-    <a asp-action="RegistrationForm">Register now</a>
+<div class="container text-center">
+    <!-- En sentrert container for innholdet -->
+    <div class="card mt-5" style="width: 22rem; margin: auto; padding: 20px; background-color: rgba(255, 255, 255, 0.8);">
+        <!-- Hovedoverskrift for siden -->
+        <h1 class="display-4">Kartverket</h1>
+
+        <!-- E-post inntastingsfelt -->
+        <div class="form-group mt-4">
+            <label for="email"><i class="fas fa-envelope"></i> Email address</label>
+            <!-- Inputfelt for e-postadresse med ikonet for e-post -->
+            <input type="email" class="form-control" id="email" placeholder="Email address">
+        </div>
+
+        <!-- Passord inntastingsfelt -->
+        <div class="form-group mt-3">
+            <label for="password"><i class="fas fa-lock"></i> Password</label>
+            <!-- Inputfelt for passord med låsikonet -->
+            <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+
+        <!-- Logg inn knapp -->
+        <button class="btn btn-success mt-4" style="width: 100%; font-weight: bold;">
+            Log In <i class="fas fa-arrow-right"></i> <!-- Pilikon for å indikere handling -->
+        </button>
+
+        <!-- Link til registreringssiden -->
+        <div class="mt-3">
+            <a asp-action="RegistrationForm">Register now</a>
+        </div>
+    </div>
 </div>
+
+<!-- Stiler for siden -->
+<style>
+    /* Bakgrunnsbilde for hele siden */
+    body {
+        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
+        background-size: cover;
+        background-position: center;
+    }
+
+    /* Styling for kortet */
+    .card {
+        border-radius: 8px; /* Runde kanter */
+        border: 1px solid #ddd; /* Lys kant rundt kortet */
+    }
+
+    /* Styling for etikettene i skjemaet */
+    .form-group label {
+        display: flex; /* Flexbox for å justere ikon og tekst horisontalt */
+        align-items: center; /* Vertikal sentrering av innholdet */
+    }
+
+        .form-group label i {
+            margin-right: 10px; /* Avstand mellom ikonet og teksten */
+        }
+
+    /* Styling for knappen */
+    .btn-success {
+        background-color: #4CAF50; /* Grønn farge for knappen */
+        border: none; /* Fjerner standard kant */
+    }
+
+        .btn-success:hover {
+            background-color: #45a049; /* Mørkere grønn farge ved hover */
+        }
+</style>

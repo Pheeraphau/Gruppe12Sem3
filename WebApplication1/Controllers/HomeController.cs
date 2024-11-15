@@ -9,16 +9,12 @@ namespace WebApplication1.Controllers
         private readonly ILogger<HomeController> _logger;
 
         private static List<PositionModel> positions = new List<PositionModel>();
-
         private static List<AreaChange> changes = new List<AreaChange>();
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
-
-
-
 
         [HttpGet]
         public IActionResult CorrectionOverview()
@@ -62,7 +58,6 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 positions.Add(model);
-
                 return View("CorrectionOverview", positions);
             }
 
@@ -80,20 +75,54 @@ namespace WebApplication1.Controllers
             };
 
             changes.Add(newChange);
-
             return RedirectToAction("AreaChangeOverview");
         }
 
+        // GET for registreringsskjema
         [HttpGet]
         public ViewResult RegistrationForm()
         {
             return View();
         }
 
+        // POST for registreringsskjema med omdirigering til RegisterAreaChange etter registrering
         [HttpPost]
-        public ViewResult RegistrationForm(UserData userData)
+        public IActionResult RegistrationForm(UserData userData)
         {
-            return View("Overview", userData);
+            if (ModelState.IsValid)
+            {
+                // Legg til brukeren til en database eller en liste hvis ønsket (valgfritt)
+
+                // Omdiriger til RegisterAreaChange etter registrering
+                return RedirectToAction("RegisterAreaChange");
+            }
+
+            // Hvis modellen ikke er gyldig, vis skjemaet på nytt
+            return View(userData);
+        }
+
+        // Login-handling for omdirigering til RegisterAreaChange
+        [HttpPost]
+        public IActionResult Login(string email, string password)
+        {
+            bool isUserValid = ValidateUser(email, password);
+
+            if (isUserValid)
+            {
+                // Omdiriger til RegisterAreaChange etter vellykket innlogging
+                return RedirectToAction("RegisterAreaChange");
+            }
+
+            // Hvis innlogging feiler, vis logg inn-siden på nytt med feilmelding
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View();
+        }
+
+        // Metode for å validere brukerinformasjon (eksempel)
+        private bool ValidateUser(string email, string password)
+        {
+            // Legg til valideringslogikk her
+            return true; // Sett til true for å tillate alle brukere midlertidig
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -103,3 +132,5 @@ namespace WebApplication1.Controllers
         }
     }
 }
+
+

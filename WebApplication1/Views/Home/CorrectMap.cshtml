@@ -4,33 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Registrer en Posisjon</h2>
-
-<form asp-action="CorrectMap" method="post">
-    <div class="form-group" style="margin-bottom: 15px;">
-        <label for="Latitude">Latitude</label>
-        <input type="text" id="Latitude" name="Latitude" class="form-control" readonly />
-    </div>
-
-    <div class="form-group" style="margin-bottom: 15px;">
-        <label for="Longitude">Longitude</label>
-        <input type="text" id="Longitude" name="Longitude" class="form-control" readonly />
-    </div>
-
-    <div class="form-group" style="margin-bottom: 20px;">
-        <label for="Description">Description</label>
-        <textarea id="Description" name="Description" class="form-control"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Submit</button>
-</form>
+<h2>Rapporter Feil</h2>
 
 <div id="map" style="height: 400px; margin-top: 20px;"></div>
 
 @section Scripts {
     <script>
         // Initialize the map
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        var map = L.map('map').setView([60.14, 10.25], 9);
 
         // Add OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -43,12 +24,39 @@
             var lat = e.latlng.lat;
             var lng = e.latlng.lng;
 
-            // Set the latitude and longitude fields in the form
-            document.getElementById('Latitude').value = lat;
-            document.getElementById('Longitude').value = lng;
-
-            // Add marker to the map
-            L.marker([lat, lng]).addTo(map);
+            // Show a popup with a form to enter description
+            var popupContent = `
+                        <form id="errorForm">
+                            <label for="description">Beskrivelse:</label><br>
+                            <textarea id="description" name="description" rows="3" cols="30"></textarea><br>
+                            <button type="button" onclick="submitError(${lat}, ${lng})">Send inn</button>
+                        </form>
+                    `;
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent(popupContent)
+                .openOn(map);
         });
+
+        // Function to submit error
+        function submitError(lat, lng) {
+            var description = document.getElementById("description").value;
+
+            // Send data to the server using AJAX
+            fetch('/Home/SubmitError', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ latitude: lat, longitude: lng, description: description })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Feil rapportert: " + data.message);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
     </script>
 }

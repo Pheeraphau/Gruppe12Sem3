@@ -1,7 +1,79 @@
-/* Legger til mer avstand nederst på siden */
+/* Prevent horizontal scrolling */
+body, html {
+    overflow-x: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Full-height map container behind navbar and footer */
+#map-container {
+    padding-top: 10px; /* Adjust this value if needed */
+    position: fixed;
+    top: 60px; /* Adjust to match navbar height */
+    bottom: 40px; /* Adjust to match footer height */
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+
+/* Centered report bubble style */
+.report-bubble {
+    position: fixed;
+    left: 50%;
+    bottom: 80px;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    background: white;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    display: none;
+    border-radius: 8px;
+    z-index: 1001; /* Ensure popup is above map controls */
+}
+
+/* Center toolbar vertically */
+.leaflet-control-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+    margin-top: -50px; /* Adjust based on control height */
+}
+
+    /* Ensure icons within toolbar buttons are visible */
+    .leaflet-bar a img {
+        background: transparent !important;
+        opacity: 1 !important; /* Full opacity for icons */
+        border: none !important;
+        display: block; /* Ensure icons align properly */
+    }
+
+/* Adjust position of Leaflet controls to avoid overlap with top navbar */
+.leaflet-top {
+    margin-top: 10px; /* Adjust this value as needed */
+}
+
+/* Fully opaque white background for footer */
+.navbar, .footer {
+    background-color: #ffffff; /* Fully opaque */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+
+
+/* Responsive font adjustments */
 html {
-    position: relative;
-    min-height: 100%;
     font-size: 14px;
 }
 
@@ -11,17 +83,9 @@ html {
     }
 }
 
-body {
-    margin-bottom: 80px; /* Øk denne verdien for mer avstand nederst */
-    padding: 20px; /* Legg til padding for bedre plassering av innhold */
-}
-
-#map {
-    height: 400px;
-    margin-bottom: 40px; /* Gir ekstra avstand mellom kartet og bunnen av siden */
-}
-
-/* Justering av knappefokus og form */
+/* Button focus and form focus adjustments */
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+
+

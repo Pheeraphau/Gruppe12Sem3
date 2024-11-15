@@ -1,26 +1,47 @@
 ﻿@model WebApplication1.Models.AreaChange
-<form asp-action="RegisterAreaChange" method="post">
-    <input type="hidden" id="geoJsonInput" name="geoJson" />
-    <div>
-        <label for="description">Change Description:</label>
-        <textarea id="description" name="Description" class="form-control"></textarea>
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Submit</button>
-</form>
-<div id="map" style="height: 400px;"></div>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Register Area Change";
+}
+
+<div id="map-container">
+    <div id="map"></div>
+</div>
+
+<!-- Popup bubble for description -->
+<div id="reportBubble" class="report-bubble">
+    <form asp-action="RegisterAreaChange" method="post">
+        <input type="hidden" id="geoJsonInput" name="geoJson" />
+        <div class="form-group">
+            <label for="description">Beskrivelse av endring:</label>
+            <textarea id="description" name="Description" class="form-control" placeholder="Beskriv feilen her..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2" style="width: 100%;">Send inn</button>
+    </form>
+</div>
+
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
     <script>
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        // Initialize the map with fixed view
+        var map = L.map('map', {
+            center: [60.14, 10.25],
+            zoom: 9,
+            scrollWheelZoom: false
+        });
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: 'Kartdata &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
+
         var drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
+
         var drawControl = new L.Control.Draw({
             draw: {
                 polygon: true,
@@ -34,12 +55,72 @@
             }
         });
         map.addControl(drawControl);
+
+        // Handle created elements
         map.on(L.Draw.Event.CREATED, function (e) {
             var layer = e.layer;
             drawnItems.addLayer(layer);
             var geoJsonData = layer.toGeoJSON();
-            var geoJsonString = JSON.stringify(geoJsonData);
-            document.getElementById('geoJsonInput').value = geoJsonString;
+            document.getElementById('geoJsonInput').value = JSON.stringify(geoJsonData);
+
+            // Show report bubble
+            document.getElementById('reportBubble').style.display = 'block';
+        });
+
+        // Hide report bubble on submit
+        document.querySelector("#reportBubble form").addEventListener("submit", function () {
+            document.getElementById('reportBubble').style.display = 'none';
         });
     </script>
 }
+
+<style>
+    /* Styling to avoid horizontal scrolling and ensure full height */
+    body, html {
+        overflow-x: hidden;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Full-height map container behind the navbar and footer */
+    #map-container {
+        position: fixed;
+        top: 60px; /* Adjust to match navbar height */
+        bottom: 40px; /* Adjust to leave room for footer */
+        left: 0;
+        right: 0;
+        overflow: hidden;
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+
+    /* Centered report bubble style */
+    .report-bubble {
+        position: fixed;
+        left: 50%;
+        bottom: 80px;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 500px;
+        background: white;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        display: none;
+        border-radius: 8px;
+        z-index: 1001; /* Ensure popup is above map controls */
+    }
+
+    /* Ensure navbar and footer overlap the map */
+    .navbar, .footer {
+        z-index: 1000;
+    }
+
+    /* Adjust map controls to have space from the navbar */
+    .leaflet-control-container {
+        margin-top: 70px;
+    }
+</style>
