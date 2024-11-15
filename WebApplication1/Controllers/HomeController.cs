@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -9,16 +8,13 @@ namespace WebApplication1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        //EF
-        private readonly ApplicationDbContext _context;
-
+        // Bruker en lokal liste i stedet for en database
         private static List<PositionModel> positions = new List<PositionModel>();
         private static List<AreaChange> changes = new List<AreaChange>();
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _context = context;
         }
 
         [HttpGet]
@@ -45,18 +41,11 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult CorrectMap()
-        {
-            return View();
-        }
-
-        // Display overview of area changes
+        // Display overview of area changes using a local list
         [HttpGet]
         public IActionResult AreaChangeOverview()
         {
-            var changes_db = _context.GeoChanges.ToList();
-            return View(changes_db);
+            return View(changes); // Viser lokale data
         }
 
         [HttpPost]
@@ -82,40 +71,39 @@ namespace WebApplication1.Controllers
                     return BadRequest("Invalid data");
                 }
 
-                var newGeoChange = new GeoChange
+                var newChange = new AreaChange
                 {
                     GeoJson = geoJson,
                     Description = description
                 };
 
-            changes.Add(newChange);
-            return RedirectToAction("AreaChangeOverview");
+                changes.Add(newChange); // Legger til i lokal liste
+                return RedirectToAction("AreaChangeOverview");
+            }
+            catch (Exception ex)
+            {
+                // Logg feilen hvis ønskelig
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
-        // GET for registreringsskjema
         [HttpGet]
         public ViewResult RegistrationForm()
         {
             return View();
         }
 
-        // POST for registreringsskjema med omdirigering til RegisterAreaChange etter registrering
         [HttpPost]
         public IActionResult RegistrationForm(UserData userData)
         {
             if (ModelState.IsValid)
             {
-                // Legg til brukeren til en database eller en liste hvis ønsket (valgfritt)
-
-                // Omdiriger til RegisterAreaChange etter registrering
                 return RedirectToAction("RegisterAreaChange");
             }
 
-            // Hvis modellen ikke er gyldig, vis skjemaet på nytt
             return View(userData);
         }
 
-        // Login-handling for omdirigering til RegisterAreaChange
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
@@ -123,20 +111,16 @@ namespace WebApplication1.Controllers
 
             if (isUserValid)
             {
-                // Omdiriger til RegisterAreaChange etter vellykket innlogging
                 return RedirectToAction("RegisterAreaChange");
             }
 
-            // Hvis innlogging feiler, vis logg inn-siden på nytt med feilmelding
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View();
         }
 
-        // Metode for å validere brukerinformasjon (eksempel)
         private bool ValidateUser(string email, string password)
         {
-            // Legg til valideringslogikk her
-            return true; // Sett til true for å tillate alle brukere midlertidig
+            return true; // Midlertidig tillater alle brukere
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
