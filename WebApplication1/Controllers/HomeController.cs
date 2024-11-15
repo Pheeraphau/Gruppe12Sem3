@@ -23,6 +23,20 @@ namespace WebApplication1.Controllers
             return View(positions);
         }
 
+        public IActionResult MineInnmeldinger()
+        {
+            // Her henter vi data fra databasen. Bruk _context hvis du har en databasekobling.
+            var innmeldinger = new List<Innmelding>
+{
+    new Innmelding { Id = 1, Registreringsdato = new DateTime(2024, 12, 21), Forklaring = "Invitasjon", Status = "Fullført" },
+    new Innmelding { Id = 2, Registreringsdato = new DateTime(2024, 10, 02), Forklaring = "Invitasjon", Status = "Mottat" },
+    new Innmelding { Id = 3, Registreringsdato = new DateTime(2024, 06, 14), Forklaring = "Invitasjon", Status = "Under behandling" }
+};
+
+            return View(innmeldinger);
+        }
+
+
         [HttpGet]
         public IActionResult RegisterAreaChange()
         {
