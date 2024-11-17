@@ -21,7 +21,4 @@ For å kjøre applikasjonen trenger du:
 5. Kjør med Docker Compose
 
 ## Funksjonaliteter
-- Registrering av ny bruker
-- Bruker kan logge inn
-- Bruker kan legge til, endre og slette innmeldinger i databasen
 - Kartvisning med mulighet for karteendringer
