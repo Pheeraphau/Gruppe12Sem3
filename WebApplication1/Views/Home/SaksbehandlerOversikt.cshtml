@@ -1,0 +1,58 @@
+﻿@model IEnumerable<WebApplication1.Models.BrukerInnmelding>
+
+@{
+    ViewData["Title"] = "Saksbehandler Oversikt";
+}
+
+<div class="container mt-5">
+    <div class="card p-4" style="background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px;">
+        <h2 class="text-center">Aktive innmeldinger</h2>
+
+        <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Søk etter navn, ID, epost eller serienummer" />
+        </div>
+
+        <table class="table mt-4">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Ordre ID#</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Kundetelefon</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Kundenavn</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Registreringsdato</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Kommune</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Inspiser</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var BrukerInnmelding in Model)
+                {
+                    <tr class="text-center">
+                        <td>@BrukerInnmelding.Id</td>
+                        <td>@BrukerInnmelding.KundeTelefon</td>
+                        <td>@BrukerInnmelding.KundeNavn</td>
+                        <td>@BrukerInnmelding.Registreringsdato.ToString("yyyy-MM-dd")</td>
+                        <td>@BrukerInnmelding.Kommune</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Home", new { id = BrukerInnmelding.Id })" class="text-primary">Rediger</a>/
+                            <a href="@Url.Action("Details", "Home", new { id = BrukerInnmelding.Id })" class="text-secondary">detaljer</a>/
+                            <a href="@Url.Action("Print", "Home", new { id = BrukerInnmelding.Id })" class="text-success">Utskrift</a>/
+                            <a href="@Url.Action("Delete", "Home", new { id = BrukerInnmelding.Id })" class="text-danger">Slett</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
