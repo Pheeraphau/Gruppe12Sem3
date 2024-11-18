@@ -1,22 +1,19 @@
 ﻿@model WebApplication1.Models.UserData
 
-@*
-    For more informatino
-*@
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <html>
-    <head>
-        <h1>Thank you for registering your data</h1>
-        <h2>Submitted data</h2>
-    </head>
+<head>
+</head>
     <body>
-        <p><strong>Name:</strong> @Model.Name</p>
-        <p><strong>Email:</strong> @Model.Email</p>
-        <p><strong>Phone:</strong> @Model.Phone</p>
-        <p><strong>Address:</strong> @Model.Address</p>
+    <h1>Thank you for registering your data</h1>
+    <h2>Submitted data</h2>
+
+    <p><strong>Name:</strong> @Model.Name</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+    <p><strong>Address:</strong> @Model.Address</p>
     </body>
 </html>

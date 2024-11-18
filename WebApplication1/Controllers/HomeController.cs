@@ -104,22 +104,44 @@ namespace WebApplication1.Controllers
             }
         }
 
-            [HttpGet]
-        public ViewResult RegistrationForm()
+
+
+        [HttpGet]
+        public IActionResult RegistrationForm()
         {
             return View();
         }
 
-        [HttpPost]
-        public ViewResult RegistrationForm(UserData userData)
+        public IActionResult Overview()
         {
-            return View("Overview", userData);
+            return View();
+        }
+       
+
+        [HttpPost]
+        public IActionResult RegistrationForm(UserData userData)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Save the UserData object to the database
+                    _context.UserData.Add(userData);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("RegisterAreaChange");
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions
+                    Console.WriteLine($"Error: {ex.Message}");
+                    return View(); // You could return a view with an error message
+                }
+            }
+
+            // If the model is invalid, return the same view with validation errors
+            return View(userData);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
