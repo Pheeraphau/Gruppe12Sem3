@@ -4,36 +4,75 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE <html>
-</html>
-<html>
-    <head>
-        <style>
-            h1 {
-                text-align: center;
-            }
-        </style>
-    </head>
-    <body>
-        <h1 class="display-4">Registration Form</h1>
-        <form asp-action="RegistrationForm" method="post">
-            <div>
-                <label asp-for="Name">Your name:</label> 
-                <input asp-for="Name"   />
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5 p-4" style="background-color: rgba(255, 255, 255, 0.8);">
+                <h1 class="display-4 text-center">Registrer deg</h1>
+                <form asp-action="RegistrationForm" method="post">
+                    <div class="form-group mt-4">
+                        <label asp-for="Name" class="form-label">Navn</label>
+                        <input asp-for="Name" class="form-control" placeholder="Ditt navn" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="Username" class="form-label">Brukernavn</label>
+                        <input asp-for="Username" class="form-control" placeholder="Ditt brukernavn" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="Email" class="form-label">E-postadresse</label>
+                        <input asp-for="Email" class="form-control" placeholder="Din e-postadresse" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="PhoneNumber" class="form-label">Telefonnummer</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="Ditt telefonnummer" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="Address" class="form-label">Adresse</label>
+                        <input asp-for="Address" class="form-control" placeholder="Din adresse" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="Password" class="form-label">Passord</label>
+                        <input asp-for="Password" class="form-control" placeholder="Oppgi passord" type="password" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Gjenta Passord</label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Gjenta passordet" type="password" />
+                    </div>
+                    <button type="submit" class="btn btn-success mt-4" style="width: 100%; font-weight: bold;">
+                        Registrer deg
+                    </button>
+                </form>
             </div>
-        <div>
-            <label asp-for="Email">Your email:</label>
-            <input asp-for="Email" />
         </div>
-        <div>
-            <label asp-for="Phone">Your phone number:</label>
-            <input asp-for="Phone" />
-        </div>
-        <div>
-            <label asp-for="Address">Your address:</label>
-            <input asp-for="Address" />
-        </div>
-        <button type="Submit" class="btn btn-primary">Submit data</button>
-        </form>
-    </body>
-</html>
+    </div>
+</div>
+
+<style>
+    /* Bakgrunnsbilde for hele siden */
+    body {
+        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
+        background-size: cover;
+        background-position: center;
+    }
+
+    /* Styling for kortet */
+    .card {
+        border-radius: 8px; /* Runde kanter */
+        border: 1px solid #ddd; /* Lys kant rundt kortet */
+    }
+
+    /* Styling for etiketter */
+    .form-label {
+        font-weight: bold;
+    }
+
+    /* Styling for knappen */
+    .btn-success {
+        background-color: #4CAF50; /* Grønn farge for knappen */
+        border: none; /* Fjerner standard kant */
+    }
+
+        .btn-success:hover {
+            background-color: #45a049; /* Mørkere grønn farge ved hover */
+        }
+</style>
