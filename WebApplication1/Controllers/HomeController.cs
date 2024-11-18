@@ -101,12 +101,20 @@ namespace WebApplication1.Controllers
             }
         }
 
+<<<<<<< HEAD
         [HttpGet]
         public ViewResult RegistrationForm()
+=======
+
+
+        [HttpGet]
+        public IActionResult RegistrationForm()
+>>>>>>> 0f27bc61194e0c772f707ff1a5853a44c0c79901
         {
             return View();
         }
 
+<<<<<<< HEAD
         [HttpPost]
         public IActionResult RegistrationForm(UserData userData)
         {
@@ -135,13 +143,39 @@ namespace WebApplication1.Controllers
         private bool ValidateUser(string email, string password)
         {
             return true; // Midlertidig tillater alle brukere
+=======
+        public IActionResult Overview()
+        {
+            return View();
+        }
+       
+
+        [HttpPost]
+        public IActionResult RegistrationForm(UserData userData)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Save the UserData object to the database
+                    _context.UserData.Add(userData);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("RegisterAreaChange");
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions
+                    Console.WriteLine($"Error: {ex.Message}");
+                    return View(); // You could return a view with an error message
+                }
+            }
+
+            // If the model is invalid, return the same view with validation errors
+            return View(userData);
+>>>>>>> 0f27bc61194e0c772f707ff1a5853a44c0c79901
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
 
