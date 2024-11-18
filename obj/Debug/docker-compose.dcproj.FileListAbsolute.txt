@@ -1,0 +1,93 @@
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\WebApplication1.deps.json
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\WebApplication1.runtimeconfig.json
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\appsettings.Development.json
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\appsettings.json
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Models\appsettings.json
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\WebApplication1.staticwebassets.runtime.json
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\WebApplication1.exe
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\WebApplication1.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.EntityFrameworkCore.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.Extensions.Logging.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\Microsoft.Extensions.Options.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\MySqlConnector.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3\bin\Debug\WebApplication1.pdb
+C:\Users\emmab\source\repos\Gruppe12Sem3\obj\Debug\docker-compose.dcproj.AssemblyReference.cache
+C:\Users\emmab\source\repos\Gruppe12Sem3\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
+C:\Users\emmab\source\repos\Gruppe12Sem3\obj\Debug\docker-c.35A3FFBA.Up2Date
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\appsettings.Development.json
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Models\appsettings.json
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.deps.json
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.runtimeconfig.json
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\appsettings.json
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.staticwebassets.runtime.json
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.exe
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Logging.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Options.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\MySqlConnector.dll
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.pdb
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-compose.dcproj.AssemblyReference.cache
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
+C:\Users\emmab\source\repos\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-c.35A3FFBA.Up2Date
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\appsettings.Development.json
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\appsettings.json
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Models\appsettings.json
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.deps.json
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.runtimeconfig.json
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.staticwebassets.runtime.json
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.exe
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Logging.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Options.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\MySqlConnector.dll
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.pdb
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-compose.dcproj.AssemblyReference.cache
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
+C:\Users\Emma Buerstad\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-c.35A3FFBA.Up2Date
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.deps.json
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.runtimeconfig.json
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\appsettings.Development.json
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\appsettings.json
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Models\appsettings.json
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.staticwebassets.runtime.json
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.staticwebassets.endpoints.json
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.exe
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Logging.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\Microsoft.Extensions.Options.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\MySqlConnector.dll
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\bin\Debug\WebApplication1.pdb
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-compose.dcproj.AssemblyReference.cache
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
+C:\Users\Lenovo\Downloads\Gruppe12Sem3_dockerCompose_fungerende_database (1)\Gruppe12Sem3_dockerCompose_fungerende_database\obj\Debug\docker-c.35A3FFBA.Up2Date
