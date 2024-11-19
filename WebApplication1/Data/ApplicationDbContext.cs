@@ -11,5 +11,12 @@ namespace WebApplication1.Data
 
         // DbSet for GeoChange
         public DbSet<GeoChange> GeoChanges { get; set; }
+        
+        
+        // DbSet for UserData
+        public DbSet<UserData> UserData { get; set; }
+
+
+        public DbSet<AreaChange> AreaChange { get; set; }
     }
 }

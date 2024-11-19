@@ -1,35 +1,49 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Set character encoding to UTF-8 for wide language support -->
     <meta charset="utf-8" />
+
+    <!-- Make the page responsive to the device width -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApplication1</title>
-   @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+
+    <!-- Set the page title dynamically -->
+    <title>@ViewData["Title"] - Kartverket</title>
+
+    <!-- Link to local CSS files and cache-bust for updates -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/MintyCSSTheme.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <link href="~/lib/leaflet/leaflet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <!-- Navbar with logo and navigation links -->
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light" style="background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); position: fixed; width: 100%; z-index: 1000;">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApplication1</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <!-- Logo linking to the homepage -->
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <!-- Inserted the base64 encoded logo image -->
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAqFBMVEX///8klUcaWaAWV58AjjXa6t0lXqMLkDurz7QATJrP1+bQ49QAT5ypudMAR5gASpkAjDAARJcYkkBhq3X1+vYxmVBCnlvd5O5afrLp8+u2xNoAUp1TebBkhbaEncOwv9e52MGMwJnE3sqFu5KeyKiv0bdLomJwsoDi7uV8t4oAgxPI4M4sl01JoWHm6/LJ1OSVqcpDcKt3k744Z6cAP5Xj6fHz9vp8l8DmEsf7AAADj0lEQVR4nO3cfVOiQACAcQQURQVExZI0NSu7usy87Pt/s1u888az5C2JXed5/kaH3yzsGrOkaURERERERERERERERERERERERERn12X19F2Wjdpr0vfM0+dV5mXDdnU9v1JIZtAr27ataxXjE/n9snFRE68wYKViTcvmifoFAisVr2yemEWLHEJxK87KBmpNs1ChVS8biBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhwuNC3zS9pyAI+qZnWifYsiiZ0PKC6Wy38bVXndwE3leVUgnNyvzDtt7e7d3XNp9KJDT7R/bYLe6/YpRGaPmT44cs7vLPRrIIvYf4g27NvMMoh9D3m0lHXQY5t0pLITS7aY57yLfTVgbhj5TvDNRzEWUQJl6hux7zECUQZmiRY/lXS6j1njITFRNq2s+sU6pyQu0+4+KvnlCbZptvFBRmfItIRaFW9TPMN0oKtd5d+vlGTWGWm1FVodZMe6UqKxTLRrphVFiozdIMo+89ln2en7R5Htj2YJN8YOIfVL53I8eLwHstXy5Cx41ynNV4mXB0NYj7heN79zK9sB41HLmN0DD0PxlG2HBfB/EfqVvHFg7hW3zPaadt8Brx9INC5yrBOPU+MfqmOZVs/JYrJzzU/R3Kzug59qO9uf//cyrf8rqT7znt1A3X7ofR2xvHzjjh881p9E8ZLJFpev2HiWzTyzLWFw1j2LpO+pJedVafz29nVdl0Ym24cuJ929xVwu0ocbaT7NvejkmXqrTZjVRCXW/VFB3G1EJlhzG9UAzjOn7hkLMsQt1w2mWfb/YyCXXDHZV9wpnLJhTrv67ahJNVKCYcxa7UzEKx/Kt1peYQ6mFNpTk1j1DMqcOUXz9M/EVbeLmEuu68pvnywepX+TdtTqG4UhPn1LeRY7TUFYorNf5HXOQTP4MUFoqzN47fjfaos31ooLZQ/MJZff447nq9eyiiuDAy1toHK8dmOHJa//6oVl4ojC2n9t623zbRo2T7erx2GvvPtM5AqG+f4zRcR+S6rcMHkuchjAshQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiHBf6J67cJPujZK8uXbZQE27SPFSUO4MvWyeaNApUJh6p22htTuFjaL7XjbuT0OnZRRR2Hkpm7Zr87Kqnb71WKX97kRERERERERERERERERERERESvQbBrl0+Lu2ESkAAAAASUVORK5CYII=" alt="Kartverket Logo" style="height: 44px; margin-right: 12px;" />
+                    <span>Kartverket</span>
+                </a>
+
+                <!-- Toggle button for smaller screens -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                <!-- Navigation menu with links -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="MineInnmeldinger">Mine Innmeldinger</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="CorrectMap">Correct Map</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="SaksbehandlerOversikt">Saksbehandler</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="RegisterAreaChange">Register Area Change</a>
@@ -39,23 +53,30 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- Main content container, adjusted to avoid overlap with fixed navbar -->
+    <div class="container" style="margin-top: 80px;">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Footer with privacy link -->
+    <footer class="footer text-muted" style="position: fixed; width: 100%; bottom: 0; background-color: #ffffff; box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); z-index: 1000;">
         <div class="container">
-            &copy; 2024 - WebApplication1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            © 2024 - WebApplication1 - <a href="/Home/Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- Importing jQuery and Bootstrap JavaScript libraries from local storage -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-   @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
     <script src="~/js/bootstrap.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha25620nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="~/lib/leaflet/leaflet.js"></script>
+
+    <!-- Importing Leaflet JavaScript for map display -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <!-- Including additional JavaScript sections specified on individual pages -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
