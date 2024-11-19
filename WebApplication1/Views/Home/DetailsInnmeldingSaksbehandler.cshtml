@@ -1,0 +1,50 @@
+﻿@model WebApplication1.Data.GeoChange
+
+@{
+    ViewData["Title"] = "Details - Saksbehandler";
+}
+
+<div class="container mt-5">
+    <!-- Back Button slightly moved down -->
+    <div class="d-flex justify-content-end" style="margin-top: 20px; margin-bottom: 15px;">
+        <a href="@Url.Action("SaksBehandlerOversikt", "Home")" class="btn btn-secondary">Back</a>
+    </div>
+
+    <h2>Details for ID: @Model.Id</h2>
+
+    <div class="mb-3">
+        <strong>Description:</strong> @Model.Description
+    </div>
+
+    <div class="mb-3">
+        <strong>Status:</strong> @Model.Status
+    </div>
+
+    <!-- Map Section -->
+    <div class="mb-3">
+        <h4>Map:</h4>
+        <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 2); // Default center and zoom level
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Parse the GeoJSON from the model
+        var geoJsonData = @Html.Raw(Model.GeoJson);
+
+        // Add GeoJSON to the map
+        var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
+
+        // Fit the map to the bounds of the GeoJSON layer
+        map.fitBounds(geoJsonLayer.getBounds());
+    });
+</script>
