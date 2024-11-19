@@ -25,3 +25,126 @@ body {
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+ /* General container styling */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75'); /* Sett bakgrunnsbildet her */
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Logo og header */
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+    .login-header .logo {
+        width: 60px;
+        margin-bottom: 10px;
+    }
+
+/* Login box styling */
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+}
+
+/* Form elements styling */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    background: #f9f9f9;
+}
+
+    .input-container .icon {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+
+    .input-container input {
+        border: none;
+        outline: none;
+        flex: 1;
+        background: transparent;
+        padding: 8px;
+    }
+
+/* Login button */
+.login-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+    .login-button:hover {
+        background-color: #45a049;
+    }
+
+/* Register link styling */
+.register-link {
+    margin-top: 10px;
+}
+
+    .register-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-image: url('/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+    .register-header .logo {
+        width: 50px;
+        margin-bottom: 10px;
+    }
+
+.register-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 350px;
+}
