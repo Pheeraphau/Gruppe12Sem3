@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  webapplication1:
+    build:
+      context: "/Users/jonasmoenpettersen/Documents/Gruppe12Sem3_dockerCompose_fungerende_database"
+      dockerfile: "WebApplication1/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/WebApplication1.dll"
+    environment:
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/WebApplication1.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "webapplication1:dev"
+    ports: []
+    volumes:
+    - "/Users/jonasmoenpettersen/Documents/Gruppe12Sem3_dockerCompose_fungerende_database/WebApplication1:/app:rw"
+    - "/Users/jonasmoenpettersen/Documents/Gruppe12Sem3_dockerCompose_fungerende_database:/src:rw"
+    - "/Users/jonasmoenpettersen/.nuget/packages:/home/app/.nuget/packages"
+    working_dir: "/app"
