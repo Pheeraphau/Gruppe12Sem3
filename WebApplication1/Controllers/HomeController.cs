@@ -52,6 +52,32 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult MineInnmeldinger()
+        {
+            try
+            {
+                // Fetch data from GeoChanges as a substitute for Innmeldinger
+                var geoChanges = _context.GeoChanges.Select(g => new Innmelding
+                {
+                    Id = g.Id, // Assuming GeoChanges has an Id
+                    Registreringsdato = DateTime.Now, // Replace with appropriate date from GeoChanges
+                    Forklaring = g.Description ?? "No description", // Map Description
+                    Status = "Not Available" // Replace with actual status if available
+                }).ToList();
+
+                // Pass the list of Innmelding to the view
+                return View(geoChanges);
+            }
+            catch (Exception ex)
+            {
+                // Log and handle the error
+                Console.WriteLine($"Error: {ex.Message}");
+                return View("Error");
+            }
+        }
+
+
         // Display overview of area changes
         [HttpGet]
         public IActionResult AreaChangeOverview()
