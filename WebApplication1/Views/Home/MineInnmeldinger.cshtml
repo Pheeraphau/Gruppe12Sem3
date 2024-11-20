@@ -1,0 +1,107 @@
+﻿@model IEnumerable<WebApplication1.Models.Innmelding>
+
+@{
+    ViewData["Title"] = "Mine Innmeldinger";
+}
+
+<!-- Stiler for siden -->
+<style>
+    /* Bakgrunnsbilde for hele siden */
+    body {
+        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
+        background-size: cover;
+        background-position: center;
+    }
+
+    /* Styling for kortet */
+    .card {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background-color: rgba(255, 255, 255, 0.9); /* Gjennomsiktig hvit bakgrunn for kortet */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Skygge for kortet */
+    }
+
+    /* Styling for etikettene i skjemaet */
+    .form-group label {
+        display: flex;
+        align-items: center;
+    }
+
+        .form-group label i {
+            margin-right: 10px;
+        }
+
+    /* Styling for knappen */
+    .btn-success {
+        background-color: #4CAF50;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #45a049;
+        }
+</style>
+
+<div class="container mt-5">
+    <div class="card p-4">
+        <h2 class="text-center">Mine innmeldinger</h2>
+
+        <table class="table mt-4">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Registreringsdato</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Forklaring</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Status</div>
+                    </th>
+                    <th>
+                        <div class="btn btn-success rounded-pill px-3">Rediger / Slett</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var innmelding in Model)
+                {
+                    <tr class="text-center">
+                        <td>@innmelding.Registreringsdato.ToString("yyyy-MM-dd")</td>
+                        <td><em>@innmelding.Beskrivelse</em></td>
+                        <td>@innmelding.Status</td>
+                        <td>
+                            <a href="@Url.Action("EditInnmeldingInfo_SaksBehandler", "Home", new { id = innmelding.Id, source = "MineInnmeldinger" })" class="text-primary">Rediger</a>
+                            <a href="@Url.Action("DetailsInnmeldingSaksbehandler", "Home", new { id = innmelding.Id, source = "MineInnmeldinger" })" class="text-primary">Detaljer</a>
+                            <!-- Update Delete link to trigger JavaScript -->
+                            <a href="#" class="delete-btn text-danger" data-id="@innmelding.Id" data-source="MineInnmeldinger">Slett</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                const itemId = this.getAttribute('data-id');
+                const source = this.getAttribute('data-source');
+
+                // Show confirmation dialog
+                const isConfirmed = confirm('Are you sure you want to delete this Innmelding?');
+
+                if (isConfirmed) {
+                    // If confirmed, navigate to the delete action with source
+                    window.location.href = '@Url.Action("Delete", "Home", new { id = "__id__", source = "__source__" })'
+                        .replace('__id__', itemId)
+                        .replace('__source__', source);
+                }
+            });
+        });
+    });
+</script>
