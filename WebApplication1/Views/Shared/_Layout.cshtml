@@ -18,41 +18,34 @@
 </head>
 <body>
     <header>
-        <!-- Navbar with logo and navigation links -->
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light" style="background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); position: fixed; top: 0; width: 100%; z-index: 1000;">
+        <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); position: fixed; top: 0; width: 100%; z-index: 1000;">
             <div class="container-fluid">
-                <!-- Logo linking to the homepage -->
+                <!-- Logo and Navigation Links -->
                 <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <!-- Inserted the base64 encoded logo image -->
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAqFBMVEX///8klUcaWaAWV58AjjXa6t0lXqMLkDurz7QATJrP1+bQ49QAT5ypudMAR5gASpkAjDAARJcYkkBhq3X1+vYxmVBCnlvd5O5afrLp8+u2xNoAUp1TebBkhbaEncOwv9e52MGMwJnE3sqFu5KeyKiv0bdLomJwsoDi7uV8t4oAgxPI4M4sl01JoWHm6/LJ1OSVqcpDcKt3k744Z6cAP5Xj6fHz9vp8l8DmEsf7AAADj0lEQVR4nO3cfVOiQACAcQQURQVExZI0NSu7usy87Pt/s1u888az5C2JXed5/kaH3yzsGrOkaURERERERERERERERERERERERERn12X19F2Wjdpr0vfM0+dV5mXDdnU9v1JIZtAr27ataxXjE/n9snFRE68wYKViTcvmifoFAisVr2yemEWLHEJxK87KBmpNs1ChVS8biBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhwuNC3zS9pyAI+qZnWifYsiiZ0PKC6Wy38bVXndwE3leVUgnNyvzDtt7e7d3XNp9KJDT7R/bYLe6/YpRGaPmT44cs7vLPRrIIvYf4g27NvMMoh9D3m0lHXQY5t0pLITS7aY57yLfTVgbhj5TvDNRzEWUQJl6hux7zECUQZmiRY/lXS6j1njITFRNq2s+sU6pyQu0+4+KvnlCbZptvFBRmfItIRaFW9TPMN0oKtd5d+vlGTWGWm1FVodZMe6UqKxTLRrphVFiozdIMo+89ln2en7R5Htj2YJN8YOIfVL53I8eLwHstXy5Cx41ynNV4mXB0NYj7heN79zK9sB41HLmN0DD0PxlG2HBfB/EfqVvHFg7hW3zPaadt8Brx9INC5yrBOPU+MfqmOZVs/JYrJzzU/R3Kzug59qO9uf//cyrf8rqT7znt1A3X7ofR2xvHzjjh881p9E8ZLJFpev2HiWzTyzLWFw1j2LpO+pJedVafz29nVdl0Ym24cuJ929xVwu0ocbaT7NvejkmXqrTZjVRCXW/VFB3G1EJlhzG9UAzjOn7hkLMsQt1w2mWfb/YyCXXDHZV9wpnLJhTrv67ahJNVKCYcxa7UzEKx/Kt1peYQ6mFNpTk1j1DMqcOUXz9M/EVbeLmEuu68pvnywepX+TdtTqG4UhPn1LeRY7TUFYorNf5HXOQTP4MUFoqzN47fjfaos31ooLZQ/MJZff447nq9eyiiuDAy1toHK8dmOHJa//6oVl4ojC2n9t623zbRo2T7erx2GvvPtM5AqG+f4zRcR+S6rcMHkuchjAshQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiHBf6J67cJPujZK8uXbZQE27SPFSUO4MvWyeaNApUJh6p22htTuFjaL7XjbuT0OnZRRR2Hkpm7Zr87Kqnb71WKX97kRERERERERERERERERERERESvQbBrl0+Lu2ESkAAAAASUVORK5CYII=" alt="Kartverket Logo" style="height: 44px; margin-right: 12px;" />
                     <span>Kartverket</span>
                 </a>
-
-                <!-- Toggle button for smaller screens -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <!-- Navigation menu with links -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="MineInnmeldinger">Mine Innmeldinger</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="SaksbehandlerOversikt">Saksbehandler</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="RegisterAreaChange">Register Area Change</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="MineInnmeldinger">Mine Innmeldinger</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="SaksbehandlerOversikt">Saksbehandler</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="RegisterAreaChange">Register Area Change</a></li>
                     </ul>
+                    <!-- Logout Button -->
+                    <form asp-action="LogOut" method="post" class="d-flex" style="margin-right: 20px;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger">Logg ut</button>
+                    </form>
+
                 </div>
             </div>
         </nav>
     </header>
+
 
     <!-- Main content container, adjusted to avoid overlap with fixed navbar -->
     <div class="container" style="margin-top: 80px;">

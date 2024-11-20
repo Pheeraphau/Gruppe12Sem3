@@ -55,7 +55,7 @@
                         <td>@BrukerInnmelding.Beskrivelse</td>
                         <td>@BrukerInnmelding.Status</td>
                         <td>
-                            <a href="@Url.Action("Edit", "Home", new { id = BrukerInnmelding.Id })" class="text-primary">Rediger</a>
+                            <a href="@Url.Action("EditInnmeldingInfo_Saksbehandler", "Home", new { id = BrukerInnmelding.Id })" class="text-primary">Rediger</a>
                             <a href="@Url.Action("Details", "Home", new { id = BrukerInnmelding.Id })" class="text-primary">Detaljer</a>
                             <a href="#" class="delete-btn text-danger" data-id="@BrukerInnmelding.Id" data-source="SaksBehandlerOversikt">Delete</a>
                         </td>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebApplication1.Data;
@@ -303,6 +304,19 @@ namespace WebApplication1.Controllers
             ViewData["Source"] = source;
             return View(geoChange); // Ensure this returns the correct view name
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOut()
+        {
+            // Clear the authentication cookies
+            await HttpContext.SignOutAsync();
+
+            // Redirect to the homepage
+            return RedirectToAction("Index", "Home");
+        }
+
+
 
         public IActionResult DetailsInnmeldingSaksbehandler(int id, string source)
         {
