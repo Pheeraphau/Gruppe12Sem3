@@ -53,19 +53,13 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        // Display overview of area changes
         [HttpGet]
-        public IActionResult AreaChangeOverview(int id)
+        public IActionResult AreaChangeOverview()
         {
-            // Hent den spesifikke endringen basert på ID
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-            if (geoChange == null)
-            {
-                return NotFound();
-            }
-
-            return View(geoChange);
+            var changes_db = _context.GeoChanges.ToList(); // Hent alle GeoChanges
+            return View(changes_db); // Returner listen til visningen
         }
+
 
         [HttpPost]
         public IActionResult CorrectMap(PositionModel model)
@@ -99,7 +93,7 @@ namespace WebApplication1.Controllers
                 _context.GeoChanges.Add(newGeoChange);
                 _context.SaveChanges();
 
-                // Hent alle registrerte endringer for å vise i oversikten
+                // Hent alle registrerte endringer for ï¿½ vise i oversikten
                 var allChanges = _context.GeoChanges.ToList();
 
                 return View("AreaChangeOverview", allChanges); // Send listen av alle GeoChanges til visningen

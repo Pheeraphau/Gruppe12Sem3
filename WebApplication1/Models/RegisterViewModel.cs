@@ -6,23 +6,23 @@ namespace WebApplication1.Models
     {
         [Required]
         [StringLength(50)]
-        [Display(Name = "Username")]
+        [Display(Name = "Brukernavn")]
         public string Username { get; set; }
 
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "E-postadresse")]
         public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Passord")]
         public string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
-        [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessage = "Passordene samsvarer ikke ")]
+        [Display(Name = "Bekreft passord")]
         public string ConfirmPassword { get; set; }
     }
 }

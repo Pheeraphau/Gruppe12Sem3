@@ -6,12 +6,12 @@ namespace WebApplication1.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "E-postadresse")]
         public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Passord")]
         public string Password { get; set; }
     }
 }
