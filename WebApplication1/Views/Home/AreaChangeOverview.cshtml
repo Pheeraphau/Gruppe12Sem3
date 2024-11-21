@@ -1,7 +1,7 @@
-﻿@* @model List<WebApplication1.Models.AreaChange> *@
-@model List<WebApplication1.Data.GeoChange>
+﻿@model List<WebApplication1.Data.GeoChange>
+
 @{
-    ViewData["Title"] = "Overview";
+    ViewData["Title"] = "Overview of Registered Changes";
 }
 
 <h2>Overview of Registered Changes</h2>
@@ -26,7 +26,7 @@
     </tbody>
 </table>
 
-<!-- Map container with defined height -->
+<!-- Map container -->
 <div id="map" style="height: 400px;"></div>
 
 @section Scripts {
@@ -35,8 +35,8 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        // Initialize the map and set its initial view
-        var map = L.map('map').setView([51.505, -0.09], 13); // Adjust coordinates and zoom as needed
+        // Initialize the map
+        var map = L.map('map');
 
         // Add OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -46,13 +46,29 @@
         // Iterate over registered changes and add them to the map
         var changes = @Html.Raw(Json.Serialize(Model));
 
-        changes.forEach(function (change) {
-            // Parse the GeoJSON data and add it to the map
-            var layer = L.geoJSON(JSON.parse(change.geoJson)).addTo(map);
+        if (changes.length > 0) {
+            var bounds = L.latLngBounds(); // Initialize bounds to fit all GeoJSON layers
 
-            // Bind a popup with the change description
-            layer.bindPopup(change.description);
-        });
+            changes.forEach(function (change) {
+                try {
+                    // Parse GeoJSON data and add to the map
+                    var geoLayer = L.geoJSON(JSON.parse(change.geoJson)).addTo(map);
+
+                    // Extend bounds to include this layer
+                    bounds.extend(geoLayer.getBounds());
+
+                    // Bind a popup with the description
+                    geoLayer.bindPopup(change.description);
+                } catch (error) {
+                    console.error("Failed to load GeoJSON data for ID:", change.id, "Error:", error);
+                }
+            });
+
+            // Fit map to bounds of all layers
+            map.fitBounds(bounds);
+        } else {
+            // Default map view if no data is present
+            map.setView([60.14, 10.25], 9);
+        }
     </script>
 }
-

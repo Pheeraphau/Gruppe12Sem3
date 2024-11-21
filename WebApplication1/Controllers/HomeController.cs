@@ -55,10 +55,16 @@ namespace WebApplication1.Controllers
 
         // Display overview of area changes
         [HttpGet]
-        public IActionResult AreaChangeOverview()
+        public IActionResult AreaChangeOverview(int id)
         {
-            var changes_db = _context.GeoChanges.ToList();
-            return View(changes_db);
+            // Hent den spesifikke endringen basert på ID
+            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
+            if (geoChange == null)
+            {
+                return NotFound();
+            }
+
+            return View(geoChange);
         }
 
         [HttpPost]
@@ -83,18 +89,20 @@ namespace WebApplication1.Controllers
                     return BadRequest("Invalid data");
                 }
 
+                // Opprett en ny GeoChange og lagre den i databasen
                 var newGeoChange = new GeoChange
                 {
                     GeoJson = geoJson,
                     Description = description
                 };
 
-                // Save to the database
                 _context.GeoChanges.Add(newGeoChange);
                 _context.SaveChanges();
 
-                // Redirect to the overview of changes
-                return RedirectToAction("AreaChangeOverview");
+                // Hent alle registrerte endringer for å vise i oversikten
+                var allChanges = _context.GeoChanges.ToList();
+
+                return View("AreaChangeOverview", allChanges); // Send listen av alle GeoChanges til visningen
             }
             catch (Exception ex)
             {
@@ -102,6 +110,8 @@ namespace WebApplication1.Controllers
                 throw;
             }
         }
+
+
 
         [HttpGet]
         public IActionResult RegistrationForm()
