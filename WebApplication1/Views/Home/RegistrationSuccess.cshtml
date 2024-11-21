@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Registration Successful";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h4>Registration Successful!</h4>
+            <p class="mt-4">
+                You will be redirected to the login page in
+                <span id="countdown">7</span> seconds.
+            </p>
+            <p>
+                If you are not redirected,
+                <a asp-action="Login" asp-controller="Account">click here</a> to go to the login page.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    var seconds = 7; // Countdown starting from 7 seconds
+    var countdownElement = document.getElementById('countdown');
+
+    // Update the countdown every second
+    setInterval(function () {
+        seconds--;
+        countdownElement.textContent = seconds;
+
+        // Redirect when countdown reaches zero
+        if (seconds <= 0) {
+            window.location.href = '@Url.Action("Login", "Account")';
+        }
+    }, 1000); // 1000 milliseconds = 1 second
+</script>

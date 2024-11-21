@@ -1,9 +1,17 @@
-﻿    namespace WebApplication1.Models
-    {
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApplication1.Models
+{
     public class PositionModel
     {
-        public required string Latitude { get; set; }
-        public required string Longitude { get; set; }
-        public required string Description { get; set; }
+        [Key] // This marks the property as the primary key
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
+        // Add the missing Description property
+        public string Description { get; set; }
     }
-    }
+}

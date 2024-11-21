@@ -1,35 +1,43 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Linq;
 using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context; // For database operations
+        private readonly UserManager<IdentityUser> _userManager; // For user operations
 
-        //EF
-        private readonly ApplicationDbContext _context;
-
-        private static List<PositionModel> positions = new List<PositionModel>();
-
-        private static List<AreaChange> changes = new List<AreaChange>();
-
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        // Constructor with Dependency Injection
+        public HomeController(
+            ILogger<HomeController> logger,
+            ApplicationDbContext context,
+            UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
+
+        private static List<PositionModel> positions = new List<PositionModel>();
 
         [HttpGet]
         public IActionResult CorrectionOverview()
         {
+            var positions = _context.Positions.ToList(); // Retrieve from the database
             return View(positions);
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult RegisterAreaChange()
         {
             return View();
@@ -72,8 +80,9 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                positions.Add(model);
-                return View("CorrectionOverview", positions);
+                _context.Positions.Add(model); // Save to the database
+                _context.SaveChanges(); // Commit changes
+                return RedirectToAction("CorrectionOverview");
             }
             return View();
         }
@@ -149,45 +158,51 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public IActionResult MineInnmeldinger()
         {
-            // Fetch data from the GeoChanges database
+            // Get the logged-in user's ID
+            var userId = _userManager.GetUserId(User);
+
+            // Fetch messages for this specific user
             var innmeldinger = _context.GeoChanges
+                .Where(g => g.UserId == userId)
                 .Select(g => new Innmelding
                 {
                     Id = g.Id,
-                    Registreringsdato = DateTime.Now, // Replace with actual date if available in GeoChanges
+                    Registreringsdato = DateTime.Now, // Placeholder
                     Beskrivelse = g.Description ?? "No description available",
-                    Status = g.Status // Replace with actual status if available
+                    Status = g.Status
                 })
                 .ToList();
 
             return View(innmeldinger);
         }
 
+
         [HttpGet]
+        [Authorize(Roles = "Saksbehandler")]
         public IActionResult SaksBehandlerOversikt(string searchTerm)
         {
-            // Pass the search term back to the view
+            // Fetch and filter data for all users
             ViewData["SearchTerm"] = searchTerm;
 
-            // Fetch and filter data from GeoChanges DbSet
             var data = _context.GeoChanges
-                .Where(g => string.IsNullOrEmpty(searchTerm) ||
-                            (g.Description != null && g.Description.Contains(searchTerm)))
+                .Where(g => string.IsNullOrEmpty(searchTerm) || g.Description.Contains(searchTerm))
                 .Select(g => new BrukerInnmelding
                 {
                     Id = g.Id,
-                    KundeTelefon = "N/A", // Placeholder as GeoChange doesn't have this field
-                    KundeNavn = "N/A",    // Placeholder
-                    Registreringsdato = DateTime.Now, // Placeholder, since GeoChange doesn't have a date
-                    Beskrivelse = g.Description ?? "No description available", // Using Description as Kommune
-                    Status = g.Status // Placeholder status
+                    KundeNavn = "N/A", // Placeholder
+                    KundeTelefon = "N/A", // Placeholder
+                    Registreringsdato = DateTime.Now, // Placeholder
+                    Beskrivelse = g.Description ?? "No description available",
+                    Status = g.Status
                 })
                 .ToList();
 
             return View(data);
         }
+
 
         // Updated Delete method
         [HttpPost]
@@ -324,6 +339,34 @@ namespace WebApplication1.Controllers
 
             // Redirect to the homepage
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult AddGeoChange(string geoJson, string description)
+        {
+            if (string.IsNullOrEmpty(geoJson) || string.IsNullOrEmpty(description))
+            {
+                return BadRequest("Invalid data");
+            }
+
+            // Get the currently logged-in user's ID
+            var userId = _userManager.GetUserId(User);
+
+            // Create a new GeoChange object
+            var geoChange = new GeoChange
+            {
+                GeoJson = geoJson,
+                Description = description,
+                UserId = userId,
+                Registreringsdato = DateTime.Now // Set the current date
+            };
+
+            // Save the new GeoChange to the database
+            _context.GeoChanges.Add(geoChange);
+            _context.SaveChanges();
+
+            return RedirectToAction("MineInnmeldinger");
         }
 
 
