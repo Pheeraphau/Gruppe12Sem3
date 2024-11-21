@@ -1,12 +1,12 @@
 ﻿@model WebApplication1.Data.GeoChange
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Rediger";
     var source = ViewData["Source"] as string;
 }
 
 <div class="container mt-5">
-    <h2>Edit GeoChange</h2>
+    <h2>Rediger Geoendringer</h2>
     <form asp-action="Edit" method="post">
         <input type="hidden" asp-for="Id" />
 
@@ -16,7 +16,7 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Description">Description</label>
+            <label asp-for="Description">Beskrivelse</label>
             <textarea asp-for="Description" class="form-control"></textarea>
         </div>
 
@@ -32,7 +32,7 @@
             <input type="hidden" asp-for="Status" /> <!-- Keeps the Status value intact but hides it -->
         }
 
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="MineInnmeldinger" class="btn btn-secondary">Back</a>
+        <button type="submit" class="btn btn-primary">Lagre</button>
+        <a asp-action="MineInnmeldinger" class="btn btn-secondary">tilbake</a>
     </form>
 </div>

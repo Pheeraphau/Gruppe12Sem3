@@ -1,19 +1,19 @@
 ﻿@model WebApplication1.Data.GeoChange
 
 @{
-    ViewData["Title"] = "Details - Saksbehandler";
+    ViewData["Title"] = "Detaljer - Saksbehandler";
 }
 
 <div class="container mt-5">
     <!-- Back Button slightly moved down -->
     <div class="d-flex justify-content-end" style="margin-top: 20px; margin-bottom: 15px;">
-        <a href="@Url.Action("SaksBehandlerOversikt", "Home")" class="btn btn-secondary">Back</a>
+        <a href="@Url.Action("SaksBehandlerOversikt", "Home")" class="btn btn-secondary">Tilbake</a>
     </div>
 
-    <h2>Details for ID: @Model.Id</h2>
+    <h2>Detaljer for ID: @Model.Id</h2>
 
     <div class="mb-3">
-        <strong>Description:</strong> @Model.Description
+        <strong>Beskrivelse:</strong> @Model.Description
     </div>
 
     <div class="mb-3">
@@ -22,7 +22,7 @@
 
     <!-- Map Section -->
     <div class="mb-3">
-        <h4>Map:</h4>
+        <h4>Kart:</h4>
         <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
     </div>
 </div>

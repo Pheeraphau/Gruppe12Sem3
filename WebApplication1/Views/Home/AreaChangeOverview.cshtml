@@ -1,17 +1,17 @@
 ﻿@model List<WebApplication1.Data.GeoChange>
 
 @{
-    ViewData["Title"] = "Overview of Registered Changes";
+    ViewData["Title"] = "Oversikt over registrerte områdeendringer";
 }
 
-<h2>Overview of Registered Changes</h2>
+<h2>Oversikt over registrerte områdeendringer</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th>ID</th>
-            <th>GeoJSON</th>
-            <th>Description</th>
+            <th>Geodata</th>
+            <th>Beskrivelse</th>
         </tr>
     </thead>
     <tbody>
@@ -60,7 +60,8 @@
                     // Bind a popup with the description
                     geoLayer.bindPopup(change.description);
                 } catch (error) {
-                    console.error("Failed to load GeoJSON data for ID:", change.id, "Error:", error);
+                    console.error("Kunne ikke laste Geodata for ID:", change.id, "Feil:", error);
+
                 }
             });
 

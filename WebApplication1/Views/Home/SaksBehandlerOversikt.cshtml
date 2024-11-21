@@ -57,7 +57,7 @@
                         <td>
                             <a href="@Url.Action("EditInnmeldingInfo_Saksbehandler", "Home", new { id = BrukerInnmelding.Id })" class="text-primary">Rediger</a>
                             <a href="@Url.Action("Details", "Home", new { id = BrukerInnmelding.Id })" class="text-primary">Detaljer</a>
-                            <a href="#" class="delete-btn text-danger" data-id="@BrukerInnmelding.Id" data-source="SaksBehandlerOversikt">Delete</a>
+                            <a href="#" class="delete-btn text-danger" data-id="@BrukerInnmelding.Id" data-source="SaksBehandlerOversikt">Slett</a>
                         </td>
                     </tr>
                 }
@@ -76,7 +76,7 @@
                 const source = this.getAttribute('data-source');
 
                 // Show confirmation dialog
-                const isConfirmed = confirm('Are you sure you want to delete this Innmelding?');
+                const isConfirmed = confirm('Er du sikker på at du vil slette denne innmeldingen?');
 
                 if (isConfirmed) {
                     // If confirmed, navigate to the delete action with the source parameter
