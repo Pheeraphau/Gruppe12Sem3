@@ -1,19 +1,19 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Registration Successful";
+    ViewData["Title"] = "Registrering vellykket";
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
-            <h4>Registration Successful!</h4>
+            <h4>Registrering vellykket</h4>
             <p class="mt-4">
-                You will be redirected to the login page in
-                <span id="countdown">7</span> seconds.
+                Du vil bli sendt til innloggingssiden om
+                <span id="countdown">7</span> sekunder.
             </p>
             <p>
-                If you are not redirected,
-                <a asp-action="Login" asp-controller="Account">click here</a> to go to the login page.
+                Hvis du ikke blir omdirigert,
+                <a asp-action="Login" asp-controller="Account">Klikk her</a> for å gå til innloggingssiden.
             </p>
         </div>
     </div>
@@ -28,9 +28,9 @@
         seconds--;
         countdownElement.textContent = seconds;
 
-        // Redirect when countdown reaches zero
+        // Omdiriger når nedtellingen når null
         if (seconds <= 0) {
             window.location.href = '@Url.Action("Login", "Account")';
         }
-    }, 1000); // 1000 milliseconds = 1 second
+    }, 1000); // 1000 millisekunder = 1 sekund
 </script>

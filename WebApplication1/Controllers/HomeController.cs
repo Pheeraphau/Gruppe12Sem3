@@ -63,7 +63,7 @@ namespace WebApplication1.Controllers
 
         // Display overview of area changes
         [HttpGet]
-        [Authorize(Roles = "User")] // Ensure only logged-in users can access
+        [Authorize(Roles = "Bruker")] // Ensure only logged-in users can access
         public IActionResult AreaChangeOverview()
         {
             // Get the logged-in user's ID
@@ -100,14 +100,14 @@ namespace WebApplication1.Controllers
             {
                 if (string.IsNullOrEmpty(geoJson) || string.IsNullOrEmpty(description))
                 {
-                    return BadRequest("Invalid data");
+                    return BadRequest("Ugyldig data");
                 }
 
                 // Get the currently logged-in user's ID
                 var userId = _userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
-                    return Unauthorized("User not logged in");
+                    return Unauthorized("Bruker er ikke logget inn");
                 }
 
                 // Create a new GeoChange object

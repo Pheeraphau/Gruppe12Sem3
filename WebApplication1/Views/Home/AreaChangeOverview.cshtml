@@ -1,7 +1,7 @@
 ﻿@model List<WebApplication1.Data.GeoChange>
 
 @{
-    ViewData["Title"] = "Mine Områderegistreringer"; // "My Area Registrations"
+    ViewData["Title"] = "Mine Områderegistreringer"; // "Mine Områderegistreringer"
 }
 
 <h2 class="text-center">Mine Områderegistreringer</h2>
@@ -69,7 +69,7 @@
                     // Bind a popup with the description
                     geoLayer.bindPopup(change.description);
                 } catch (error) {
-                    console.error("Failed to load GeoJSON data for ID:", change.id, "Error:", error);
+                    console.error("Failed to load GeoJSON data for ID:", change.id, "Feil:", error);
                 }
             });
 
