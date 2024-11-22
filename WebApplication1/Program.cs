@@ -10,8 +10,13 @@ builder.Services.AddControllersWithViews();
 
 // Add database context (replace 'DefaultConnection' with your actual connection string name in appsettings.json)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MariaDbServerVersion(new Version(10, 6, 0)) // Specify your MariaDB version
+    )
+    .EnableSensitiveDataLogging() // Enable detailed logging (optional for development/debugging only)
+    .EnableDetailedErrors() // Provide detailed errors (optional for development/debugging only)
+);
 
 // Add Identity services
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -39,8 +44,8 @@ builder.Services.AddSession(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login"; // Redirect here when not logged in
-    options.AccessDeniedPath = "/Account/AccessDenied"; // Redirect here when access is denied
+    options.LoginPath = "/Account/Login"; // Redirect to Login if not authenticated
+    options.AccessDeniedPath = "/Account/AccessDenied"; // Redirect to AccessDenied if not authorized
 });
 
 var app = builder.Build();
@@ -50,51 +55,61 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    var dbContext = services.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate(); // Apply migrations if necessary
-
-    // Seed roles and admin user
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-    // Define roles
-    var roles = new[] { "Saksbehandler", "User" }; // Add roles as needed
-
-    foreach (var role in roles)
+    try
     {
-        if (!roleManager.RoleExistsAsync(role).Result)
+        // Apply pending migrations to the database
+        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.Migrate(); // Ensure database is up to date
+
+        // Get UserManager and RoleManager services
+        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // Define roles
+        var roles = new[] { "Saksbehandler", "User" };
+
+        // Seed roles
+        foreach (var role in roles)
         {
-            roleManager.CreateAsync(new IdentityRole(role)).Wait();
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        // Create a default admin user if it doesn't exist
+        var adminEmail = "kristian@testmail.com";
+        var adminPassword = "Admin123";
+
+        if (await userManager.FindByEmailAsync(adminEmail) == null)
+        {
+            var adminUser = new IdentityUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(adminUser, adminPassword);
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Saksbehandler");
+            }
+            else
+            {
+                // Log or handle errors in creating the admin user
+                Console.WriteLine($"Failed to create admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
         }
     }
-
-    // Create default admin user
-    var adminEmail = "kristian@testmail.com";
-    var adminPassword = "Admin123";
-    if (userManager.FindByEmailAsync(adminEmail).Result == null)
+    catch (Exception ex)
     {
-        var adminUser = new IdentityUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            EmailConfirmed = true
-        };
-
-        var result = userManager.CreateAsync(adminUser, adminPassword).Result;
-
-        if (result.Succeeded)
-        {
-            userManager.AddToRoleAsync(adminUser, "Saksbehandler").Wait();
-        }
+        // Log the error
+        Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+        throw; // Optionally rethrow to stop application startup
     }
 }
 
-// Configure the HTTP request pipeline
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts(); // Enforce HTTPS
-}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -104,6 +119,8 @@ app.UseRouting();
 // Add authentication and authorization middlewares
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRouting();
+app.UseHttpsRedirection();
 
 // Use session middleware
 app.UseSession();

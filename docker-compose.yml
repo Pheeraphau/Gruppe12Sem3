@@ -1,33 +1,32 @@
+version: '3.8'
+
 services:
-  my_unique_mariadb:
-    image: mariadb:11.5
-    restart: always
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: "root_password"
-      MYSQL_DATABASE: "geochangesdb"
-      MYSQL_USER: "new_user"
-      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: geochangesdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
     ports:
-      - "3306:3306"
+      - 5506:3306
     volumes:
       - mariadb_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+    networks:
+      - backend
 
   webapplication1:
+    image: ${DOCKER_REGISTRY-}webapplication1
     build:
       context: .
       dockerfile: WebApplication1/Dockerfile
     ports:
       - "5000:80"
     depends_on:
-      mariadb:
-        condition: service_healthy
+      - mariadb
     environment:
-      ConnectionStrings__DefaultConnection: "Server=mariadb;Database=geochangesdb;User=new_user;Password=user_password"
+     ConnectionStrings__DefaultConnection: "Server=mariadb;Database=geochangesdb;User=root;Password=1234"
     networks:
       - backend
 
@@ -36,3 +35,4 @@ volumes:
 
 networks:
   backend:
+  

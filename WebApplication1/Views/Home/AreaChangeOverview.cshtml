@@ -1,26 +1,35 @@
 ﻿@model List<WebApplication1.Data.GeoChange>
 
 @{
-    ViewData["Title"] = "Overview of Registered Changes";
+    ViewData["Title"] = "Mine Områderegistreringer"; // "My Area Registrations"
 }
 
-<h2>Overview of Registered Changes</h2>
+<h2 class="text-center">Mine Områderegistreringer</h2>
 
-<table class="table">
+<table class="table table-striped mt-4">
     <thead>
         <tr>
             <th>ID</th>
+            <th>Beskrivelse</th>
             <th>GeoJSON</th>
-            <th>Description</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var change in Model)
+        @if (Model.Any())
+        {
+            @foreach (var change in Model)
+            {
+                <tr>
+                    <td>@change.Id</td>
+                    <td>@change.Description</td>
+                    <td>@change.GeoJson</td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@change.Id</td>
-                <td>@change.GeoJson</td>
-                <td>@change.Description</td>
+                <td colspan="3" class="text-center">Ingen registreringer funnet</td>
             </tr>
         }
     </tbody>
@@ -43,7 +52,7 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Iterate over registered changes and add them to the map
+        // Iterate over user's registered changes and add them to the map
         var changes = @Html.Raw(Json.Serialize(Model));
 
         if (changes.length > 0) {

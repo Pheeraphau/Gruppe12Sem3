@@ -21,29 +21,50 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult RegistrationSuccess()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View(); // Create an AccessDenied.cshtml view for this
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // Create the user
                 var user = new IdentityUser { UserName = model.Username, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    // Add the user to the "User" role
+                    await _userManager.AddToRoleAsync(user, "User");
+
                     TempData["RegistrationSuccess"] = "Registration successful! You will be redirected to the login page shortly.";
-                    return RedirectToAction("RegistrationSuccess"); // Redirect to the success view
+                    return RedirectToAction("RegistrationSuccess");
                 }
 
+                // Add errors to the model state if the user creation fails
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
             }
 
+            // Return the same view with validation errors if model is invalid
             return View(model);
         }
+
 
 
         [HttpGet]
@@ -84,8 +105,9 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            await _signInManager.SignOutAsync(); // Sign out the user
+            return RedirectToAction("Index", "Home"); // Redirect to the home page
         }
+
     }
 }

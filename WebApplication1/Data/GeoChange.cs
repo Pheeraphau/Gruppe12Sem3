@@ -15,7 +15,7 @@ namespace WebApplication1.Data
         public string Description { get; set; }
 
         [BindNever] // Prevent binding from HTTP requests
-        public string UserId { get; set; } // Foreign Key for the associated user
+        public string? UserId { get; set; } // Foreign Key for the associated user
 
         // Optional registration date for tracking when the change was created
         public DateTime? Registreringsdato { get; set; } = DateTime.Now;

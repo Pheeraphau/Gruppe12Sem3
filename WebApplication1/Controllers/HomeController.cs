@@ -63,17 +63,21 @@ namespace WebApplication1.Controllers
 
         // Display overview of area changes
         [HttpGet]
-        public IActionResult AreaChangeOverview(int id)
+        [Authorize(Roles = "User")] // Ensure only logged-in users can access
+        public IActionResult AreaChangeOverview()
         {
-            // Hent den spesifikke endringen basert på ID
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-            if (geoChange == null)
-            {
-                return NotFound();
-            }
+            // Get the logged-in user's ID
+            var userId = _userManager.GetUserId(User);
 
-            return View(geoChange);
+            // Fetch only area changes that belong to this user
+            var userChanges = _context.GeoChanges
+                .Where(g => g.UserId == userId) // Filter by user ID
+                .ToList();
+
+            // Pass the filtered changes to the view
+            return View(userChanges);
         }
+
 
         [HttpPost]
         public IActionResult CorrectMap(PositionModel model)
@@ -89,6 +93,7 @@ namespace WebApplication1.Controllers
 
         // Handle form submission to register area change
         [HttpPost]
+        [Authorize(Roles = "User")] // Ensure only logged-in users can access
         public IActionResult RegisterAreaChange(string geoJson, string description)
         {
             try
@@ -98,20 +103,34 @@ namespace WebApplication1.Controllers
                     return BadRequest("Invalid data");
                 }
 
-                // Opprett en ny GeoChange og lagre den i databasen
+                // Get the currently logged-in user's ID
+                var userId = _userManager.GetUserId(User);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                // Create a new GeoChange object
                 var newGeoChange = new GeoChange
                 {
                     GeoJson = geoJson,
-                    Description = description
+                    Description = description,
+                    UserId = userId, // Associate the change with the logged-in user
+                    Registreringsdato = DateTime.Now, // Record the registration date
+                    Status = "Innsendt"
                 };
 
+                // Save the new GeoChange to the database
                 _context.GeoChanges.Add(newGeoChange);
                 _context.SaveChanges();
 
-                // Hent alle registrerte endringer for å vise i oversikten
-                var allChanges = _context.GeoChanges.ToList();
+                // Fetch all area changes for the logged-in user
+                var userChanges = _context.GeoChanges
+                    .Where(g => g.UserId == userId) // Filter by user ID
+                    .ToList();
 
-                return View("AreaChangeOverview", allChanges); // Send listen av alle GeoChanges til visningen
+                // Return the updated overview view with the user's changes
+                return View("AreaChangeOverview", userChanges);
             }
             catch (Exception ex)
             {
@@ -119,6 +138,7 @@ namespace WebApplication1.Controllers
                 throw;
             }
         }
+
 
 
 
@@ -161,23 +181,30 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "User")]
         public IActionResult MineInnmeldinger()
         {
-            // Get the logged-in user's ID
             var userId = _userManager.GetUserId(User);
 
-            // Fetch messages for this specific user
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not logged in"); // Ensure user is authenticated
+            }
+
             var innmeldinger = _context.GeoChanges
-                .Where(g => g.UserId == userId)
+                .Where(g => g.UserId == userId) // Only fetch messages for the logged-in user
                 .Select(g => new Innmelding
                 {
                     Id = g.Id,
-                    Registreringsdato = DateTime.Now, // Placeholder
+                    Registreringsdato = g.Registreringsdato ?? DateTime.Now,
                     Beskrivelse = g.Description ?? "No description available",
                     Status = g.Status
                 })
                 .ToList();
 
-            return View(innmeldinger);
+            return View(innmeldinger); // Return the user's messages
         }
+
+
+
+
 
 
         [HttpGet]

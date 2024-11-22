@@ -40,12 +40,6 @@ button.accept-policy {
     line-height: inherit;
 }
 
-.navbar .d-flex {
-    margin-left: auto; /* Aligns the logout button to the right */
-    margin-right: 20px; /* Adds some spacing from the right edge */
-}
-
-
 /* Ensure the footer spans the full width */
 .footer {
     position: fixed;
@@ -77,7 +71,49 @@ button.accept-policy {
     margin: 0;
 }
 
+/* Ensure all navbar items align vertically and look consistent */
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
+    margin-right: 15px; /* Space between items */
+}
+
+/* Remove extra padding and ensure proper alignment for buttons */
+.navbar-nav .btn-link {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    color: inherit; /* Matches the other links' color */
+}
+
+    /* Add hover effect for logout button */
+    .navbar-nav .btn-link:hover {
+        color: #007bff;
+        text-decoration: underline;
+    }
+
+/* Ensure proper alignment of the navbar content */
+.navbar .d-flex {
+    margin-left: auto; /* Push the Logout button to the right */
+    margin-right: 20px; /* Add some spacing from the edge */
+}
+
 /* Remove unnecessary padding in container */
 .container-fluid {
     padding: 0 !important;
+}
+
+/* Add responsiveness for smaller screens */
+@media (max-width: 768px) {
+    .navbar-nav .nav-item {
+        margin-right: 10px; /* Reduce spacing for smaller screens */
+    }
+
+    .navbar {
+        height: auto; /* Allow the navbar to grow for smaller screens */
+    }
+
+    .footer {
+        font-size: 14px; /* Adjust footer font size on smaller screens */
+    }
 }
