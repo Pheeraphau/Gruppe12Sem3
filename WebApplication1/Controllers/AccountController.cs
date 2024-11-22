@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using WebApplication1.Data;
 
 namespace WebApplication1.Controllers
 {
@@ -8,11 +10,16 @@ namespace WebApplication1.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ApplicationDbContext _context; // Add this field
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        // Constructor with dependency injection
+        public AccountController(UserManager<IdentityUser> userManager,
+                                 SignInManager<IdentityUser> signInManager,
+                                 ApplicationDbContext context) // Inject ApplicationDbContext
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context; // Assign to the private field
         }
 
         [HttpGet]
@@ -41,29 +48,41 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Create the user
+                // Create the user in Identity
                 var user = new IdentityUser { UserName = model.Username, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    // Add the user to the "User" role
+                    // Assign "User" role to the newly created user
                     await _userManager.AddToRoleAsync(user, "User");
 
-                    TempData["RegistrationSuccess"] = "Registration successful! You will be redirected to the login page shortly.";
+                    // Save additional user data (optional)
+                    var userData = new UserData
+                    {
+                        Name = model.Kundenavn,
+                        PhoneNumber = model.Kundetelefon,
+                        Email = model.Email,
+                        Username = model.Username
+                    };
+
+                    _context.UserData.Add(userData);
+                    await _context.SaveChangesAsync();
+
+                    TempData["RegistrationSuccess"] = "Registration successful!";
                     return RedirectToAction("RegistrationSuccess");
                 }
 
-                // Add errors to the model state if the user creation fails
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
             }
 
-            // Return the same view with validation errors if model is invalid
             return View(model);
         }
+
 
 
 

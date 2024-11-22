@@ -22,5 +22,8 @@ namespace WebApplication1.Data
 
         // Optional status field, defaulting to "Innsendt"
         public string Status { get; set; } = "Innsendt";
+
+        public string? CustomerName { get; set; }
+        public string? CustomerPhone { get; set; }
     }
 }

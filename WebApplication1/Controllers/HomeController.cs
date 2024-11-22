@@ -211,17 +211,20 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "Saksbehandler")]
         public IActionResult SaksBehandlerOversikt(string searchTerm)
         {
-            // Fetch and filter data for all users
             ViewData["SearchTerm"] = searchTerm;
 
             var data = _context.GeoChanges
-                .Where(g => string.IsNullOrEmpty(searchTerm) || g.Description.Contains(searchTerm))
+                .Where(g =>
+                    string.IsNullOrEmpty(searchTerm) ||
+                    g.Description.Contains(searchTerm) ||
+                    g.Id.ToString().Contains(searchTerm) ||
+                    g.Status.Contains(searchTerm))
                 .Select(g => new BrukerInnmelding
                 {
                     Id = g.Id,
-                    KundeNavn = "N/A", // Placeholder
-                    KundeTelefon = "N/A", // Placeholder
-                    Registreringsdato = DateTime.Now, // Placeholder
+                    KundeNavn = g.CustomerName ?? "N/A", // Fetches KundeNavn from the database
+                    KundeTelefon = g.CustomerPhone ?? "N/A", // Fetches KundeTelefon from the database
+                    Registreringsdato = g.Registreringsdato ?? DateTime.Now,
                     Beskrivelse = g.Description ?? "No description available",
                     Status = g.Status
                 })
@@ -229,6 +232,8 @@ namespace WebApplication1.Controllers
 
             return View(data);
         }
+
+
 
 
         // Updated Delete method
@@ -372,7 +377,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken] 
         public async Task<IActionResult> LogOut()
         {
             // Clear the authentication cookies

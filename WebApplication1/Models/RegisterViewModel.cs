@@ -5,7 +5,7 @@ namespace WebApplication1.Models
     public class RegisterViewModel
     {
         [Required]
-        [StringLength(50, ErrorMessage = "The username must be at most 50 characters long.")]
+        [StringLength(50)]
         [Display(Name = "Username")]
         public string Username { get; set; }
 
@@ -21,8 +21,18 @@ namespace WebApplication1.Models
 
         [Required]
         [DataType(DataType.Password)]
+        [Compare("Password")]
         [Display(Name = "Confirm Password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Kundenavn")]
+        public string Kundenavn { get; set; } // Maps to UserData.Name
+
+        [Required]
+        [StringLength(15)]
+        [Display(Name = "Kundetelefon")]
+        public string Kundetelefon { get; set; } // Maps to UserData.PhoneNumber
     }
+
 }

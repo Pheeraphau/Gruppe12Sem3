@@ -66,9 +66,7 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
         // Define roles
-        var roles = new[] { "Saksbehandler", "User" };
-
-        // Seed roles
+        var roles = new[] { "User", "Saksbehandler" };
         foreach (var role in roles)
         {
             if (!await roleManager.RoleExistsAsync(role))
@@ -76,6 +74,8 @@ using (var scope = app.Services.CreateScope())
                 await roleManager.CreateAsync(new IdentityRole(role));
             }
         }
+
+
 
         // Create a default admin user if it doesn't exist
         var adminEmail = "kristian@testmail.com";
