@@ -307,11 +307,12 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, GeoChange updatedGeoChange)
+        public IActionResult Edit(int id, GeoChange updatedGeoChange, string source = null)
         {
             if (!ModelState.IsValid)
             {
-                return View("EditInnmeldingInfo_SaksBehandler", updatedGeoChange); // Explicitly specify the view name
+                ViewData["Source"] = source; // Pass the source back to the view in case of errors
+                return View("EditInnmeldingInfo_SaksBehandler", updatedGeoChange);
             }
 
             var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
@@ -327,20 +328,33 @@ namespace WebApplication1.Controllers
 
             _context.SaveChanges(); // Commit changes to the database
 
-            return RedirectToAction("SaksBehandlerOversikt"); // Redirect back to the overview
+            // Redirect based on the source
+            if (source == "MineInnmeldinger")
+            {
+                return RedirectToAction("MineInnmeldinger"); // Redirect to "Mine Innmeldinger"
+            }
+            else
+            {
+                return RedirectToAction("SaksBehandlerOversikt"); // Redirect to "Saks Behandler Oversikt"
+            }
         }
 
+
+
         [HttpGet]
-        public IActionResult Details(int id)
+        public IActionResult Details(int id, string source = null)
         {
             var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
             if (geoChange == null)
             {
-                return NotFound(); // Return 404 if record doesn't exist
+                return NotFound();
             }
 
-            return View("DetailsInnmeldingSaksbehandler", geoChange); // Explicitly specify the view name
+            ViewData["Source"] = source; // Pass the source to the view
+            return View("DetailsInnmeldingSaksbehandler", geoChange);
         }
+
+
 
         public IActionResult EditInnmeldingInfo_SaksBehandler(int id, string source)
         {
@@ -398,22 +412,18 @@ namespace WebApplication1.Controllers
 
 
 
-        public IActionResult DetailsInnmeldingSaksbehandler(int id, string source)
+        [HttpGet]
+        public IActionResult DetailsInnmeldingSaksbehandler(int id, string source = null)
         {
-            // Retrieve the model (GeoChange or relevant model from the database)
             var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-
             if (geoChange == null)
             {
-                return NotFound();
+                return NotFound(); // Return 404 if record doesn't exist
             }
 
-            // Pass the source (from MineInnmeldinger) to the view for context
-            ViewData["Source"] = source;
-
-    // Return the Details view
-    return View(geoChange);
-}
+            ViewData["Source"] = source; // Pass the source page info to the view
+            return View(geoChange); // Render the details view
+        }
 
 
     }
