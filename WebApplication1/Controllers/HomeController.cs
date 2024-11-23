@@ -30,13 +30,7 @@ namespace WebApplication1.Controllers
 
         private static List<PositionModel> positions = new List<PositionModel>();
 
-        [HttpGet]
-        public IActionResult CorrectionOverview()
-        {
-            var positions = _context.Positions.ToList(); // Retrieve from the database
-            return View(positions);
-        }
-
+        
         [HttpGet]
         [Authorize]
         public IActionResult RegisterAreaChange()
@@ -56,12 +50,6 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult CorrectMap()
-        {
-            return View();
-        }
-
         // Display overview of area changes
         [HttpGet]
         [Authorize(Roles = "Bruker")] // Ensure only logged-in users can access
@@ -77,19 +65,6 @@ namespace WebApplication1.Controllers
 
             // Pass the filtered changes to the view
             return View(userChanges);
-        }
-
-
-        [HttpPost]
-        public IActionResult CorrectMap(PositionModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Positions.Add(model); // Save to the database
-                _context.SaveChanges(); // Commit changes
-                return RedirectToAction("CorrectionOverview");
-            }
-            return View();
         }
 
         // Handle form submission to register area change
@@ -145,11 +120,6 @@ namespace WebApplication1.Controllers
 
         [HttpGet]
         public IActionResult RegistrationForm()
-        {
-            return View();
-        }
-
-        public IActionResult Overview()
         {
             return View();
         }
