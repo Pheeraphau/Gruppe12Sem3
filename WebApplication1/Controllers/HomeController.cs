@@ -215,17 +215,18 @@ namespace WebApplication1.Controllers
             ViewData["SearchTerm"] = searchTerm;
 
             var data = _context.GeoChanges
-                .Where(g => string.IsNullOrEmpty(searchTerm) || g.Description.Contains(searchTerm))
-                .Select(g => new BrukerInnmelding
-                {
-                    Id = g.Id,
-                    KundeNavn = "N/A", // Placeholder
-                    KundeTelefon = "N/A", // Placeholder
-                    Registreringsdato = DateTime.Now, // Placeholder
-                    Beskrivelse = g.Description ?? "No description available",
-                    Status = g.Status
-                })
-                .ToList();
+     .Where(g => string.IsNullOrEmpty(searchTerm) || g.Description.Contains(searchTerm))
+     .Select(g => new BrukerInnmelding
+     {
+         Id = g.Id,
+         KundeNavn = "N/A", // Keep this if necessary
+                            // KundeTelefon = "N/A", // Remove or comment out this field
+         Registreringsdato = DateTime.Now, // Placeholder
+         Beskrivelse = g.Description ?? "No description available",
+         Status = g.Status
+     })
+     .ToList();
+
 
             return View(data);
         }
