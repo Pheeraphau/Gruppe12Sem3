@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using System.Linq;
 using WebApplication1.Data;
@@ -215,21 +216,23 @@ namespace WebApplication1.Controllers
             ViewData["SearchTerm"] = searchTerm;
 
             var data = _context.GeoChanges
-     .Where(g => string.IsNullOrEmpty(searchTerm) || g.Description.Contains(searchTerm))
-     .Select(g => new BrukerInnmelding
-     {
-         Id = g.Id,
-         KundeNavn = "N/A", // Keep this if necessary
-                            // KundeTelefon = "N/A", // Remove or comment out this field
-         Registreringsdato = DateTime.Now, // Placeholder
-         Beskrivelse = g.Description ?? "No description available",
-         Status = g.Status
-     })
-     .ToList();
-
+                .Where(g => string.IsNullOrEmpty(searchTerm) || g.Description.Contains(searchTerm))
+                .Select(g => new BrukerInnmelding
+                {
+                    Id = g.Id,
+                    KundeNavn = _context.Users
+                        .Where(u => u.Id == g.UserId)
+                        .Select(u => u.UserName) // Fetch the username
+                        .FirstOrDefault() ?? "N/A", // Handle null values explicitly
+                    Registreringsdato = g.Registreringsdato ?? DateTime.Now,
+                    Beskrivelse = g.Description ?? "No description available",
+                    Status = g.Status
+                })
+                .ToList();
 
             return View(data);
         }
+
 
 
         // Updated Delete method
@@ -294,18 +297,26 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult Edit(int id, string source = null)
+        public IActionResult Edit(int id)
         {
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
+            var geoChange = _context.GeoChanges.Find(id);
             if (geoChange == null)
             {
                 return NotFound();
             }
 
-            ViewData["Source"] = source; // Pass the source page info to the view
+            var statusOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "Innsendt", Text = "Innsendt" },
+        new SelectListItem { Value = "Under behandling", Text = "Under behandling" },
+        new SelectListItem { Value = "Godkjent", Text = "Godkjent" }
+    };
+
+            ViewBag.StatusOptions = new SelectList(statusOptions, "Value", "Text", geoChange.Status);
+
             return View(geoChange);
         }
+
 
         [HttpPost]
         public IActionResult Edit(int id, GeoChange updatedGeoChange, string source = null)

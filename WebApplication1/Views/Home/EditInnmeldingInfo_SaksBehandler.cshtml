@@ -37,4 +37,35 @@
         <a asp-action="@source" class="btn btn-secondary">Back</a> <!-- Ensure the back button uses the source -->
     </form>
 
+    <!-- Map Section -->
+    <div class="mt-4">
+        <h4>Map:</h4>
+        <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 2); // Default center and zoom level
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Parse the GeoJSON from the model
+        var geoJsonData = @Html.Raw(Model.GeoJson);
+
+        // Add GeoJSON to the map
+        var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
+
+        // Fit the map to the bounds of the GeoJSON layer
+        map.fitBounds(geoJsonLayer.getBounds());
+    });
+</script>
+
+<!-- Add Leaflet.js and CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
