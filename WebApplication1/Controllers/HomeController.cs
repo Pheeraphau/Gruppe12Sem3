@@ -212,18 +212,26 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "Saksbehandler")]
         public IActionResult SaksBehandlerOversikt(string searchTerm)
         {
-            // Fetch and filter data for all users
             ViewData["SearchTerm"] = searchTerm;
 
+            // Fetch and filter data
             var data = _context.GeoChanges
-                .Where(g => string.IsNullOrEmpty(searchTerm) || g.Description.Contains(searchTerm))
+                .Where(g =>
+                    string.IsNullOrEmpty(searchTerm) ||
+                    g.Id.ToString().Contains(searchTerm) ||
+                    _context.Users.Where(u => u.Id == g.UserId)
+                                  .Select(u => u.UserName)
+                                  .FirstOrDefault()
+                                  .Contains(searchTerm) ||
+                    g.Description.Contains(searchTerm)
+                )
                 .Select(g => new BrukerInnmelding
                 {
                     Id = g.Id,
                     KundeNavn = _context.Users
                         .Where(u => u.Id == g.UserId)
-                        .Select(u => u.UserName) // Fetch the username
-                        .FirstOrDefault() ?? "N/A", // Handle null values explicitly
+                        .Select(u => u.UserName)
+                        .FirstOrDefault() ?? "N/A",
                     Registreringsdato = g.Registreringsdato ?? DateTime.Now,
                     Beskrivelse = g.Description ?? "No description available",
                     Status = g.Status
@@ -232,6 +240,7 @@ namespace WebApplication1.Controllers
 
             return View(data);
         }
+
 
 
 

@@ -5,31 +5,60 @@
     ViewData["Title"] = "Logg inn";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center">Logg inn</h2>
-            <form asp-action="Login" method="post">
-                <div class="form-group mt-3">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-3">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" class="form-control" type="password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="form-check mt-3">
-                    <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
-                    <label asp-for="RememberMe" class="form-check-label">Husk meg</label>
-                </div>
-                <button type="submit" class="btn btn-primary mt-3 w-100">Logg inn</button>
-            </form>
-        </div>
+<!-- Main container -->
+<div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 150px);">
+    <div class="card shadow-lg p-5" style="width: 22rem; background-color: rgba(255, 255, 255, 0.9); border-radius: 15px;">
+        <!-- Header -->
+        <h2 class="text-center mb-4" style="font-size: 1.8rem; font-weight: bold; color: #333;">Logg inn</h2>
+
+        <!-- Login form -->
+        <form asp-action="Login" method="post">
+            <div class="form-group mt-3">
+                <label asp-for="Email" style="color: #555;">Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Password" style="color: #555;">Password</label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-check mt-3">
+                <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                <label asp-for="RememberMe" class="form-check-label" style="color: #555;">Husk meg</label>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-green mt-4 w-100" style="font-weight: bold;">Logg inn</button>
+        </form>
     </div>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+<!-- Custom Styles -->
+<style>
+    body {
+        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+        height: 100vh; /* Full viewport height */
+        overflow: hidden; /* Disable scrolling */
+    }
+
+    .card {
+        border: 1px solid #ddd;
+    }
+
+    .btn-green {
+        background-color: #3da539; /* Green from the logo */
+        border-color: #3da539;
+        color: white;
+    }
+
+        .btn-green:hover {
+            background-color: #318a2e; /* Darker green for hover */
+            border-color: #318a2e;
+        }
+</style>

@@ -85,13 +85,25 @@ namespace WebApplication1.Controllers
                     var result = await _signInManager.PasswordSignInAsync(
                         userName: user.UserName,
                         password: model.Password,
-                        isPersistent: false,
+                        isPersistent: model.RememberMe,
                         lockoutOnFailure: false
                     );
 
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("RegisterAreaChange", "Home");
+                        // Check the user's role and redirect accordingly
+                        var roles = await _userManager.GetRolesAsync(user);
+                        if (roles.Contains("Saksbehandler"))
+                        {
+                            return RedirectToAction("SaksBehandlerOversikt", "Home");
+                        }
+                        else if (roles.Contains("User"))
+                        {
+                            return RedirectToAction("MineInnmeldinger", "Home");
+                        }
+
+                        // Default fallback redirection
+                        return RedirectToAction("Index", "Home");
                     }
                 }
 
@@ -100,6 +112,7 @@ namespace WebApplication1.Controllers
 
             return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

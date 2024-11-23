@@ -1,77 +1,63 @@
 ﻿@{
-    // Setter layouten for denne siden til å bruke standardlayouten som ligger i Views/Shared/_Layout.cshtml
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    // Setter tittelen på siden som vises i nettleserfanen
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Velkommen";
 }
 
-<div class="container text-center">
-    <!-- En sentrert container for innholdet -->
-    <div class="card mt-5" style="width: 22rem; margin: auto; padding: 20px; background-color: rgba(255, 255, 255, 0.8);">
-        <!-- Hovedoverskrift for siden -->
-        <h1 class="display-4">Kartverket</h1>
+<!-- Main container -->
+<div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 150px);">
+    <div class="card shadow-lg p-5" style="width: 22rem; background-color: rgba(255, 255, 255, 0.9); border-radius: 15px;">
+        <!-- Welcome text -->
+        <h1 class="mb-4" style="font-size: 1.8rem; font-weight: bold; color: #333;">Velkommen til Kartverket</h1>
 
-        <!-- E-post inntastingsfelt -->
-        <div class="form-group mt-4">
-            <label for="email"><i class="fas fa-envelope"></i> Email address</label>
-            <!-- Inputfelt for e-postadresse med ikonet for e-post -->
-            <input type="email" class="form-control" id="email" placeholder="Email address">
-        </div>
+        <!-- Description -->
+        <p class="mb-4" style="font-size: 1rem; color: #555;">
+            Vennligst logg inn eller registrer deg for å komme i gang.
+        </p>
 
-        <!-- Passord inntastingsfelt -->
-        <div class="form-group mt-3">
-            <label for="password"><i class="fas fa-lock"></i> Password</label>
-            <!-- Inputfelt for passord med låsikonet -->
-            <input type="password" class="form-control" id="password" placeholder="Password">
-        </div>
-
-        <!-- Logg inn knapp -->
-        <a href="@Url.Action("RegisterAreaChange", "Home")" class="btn btn-success mt-4" style="width: 100%; font-weight: bold;">
-            Log In <i class="fas fa-arrow-right"></i>
+        <!-- Buttons -->
+        <a href="@Url.Action("Login", "Account")" class="btn btn-green btn-block mb-3" style="width: 100%; font-weight: bold;">
+            Logg inn
         </a>
-
-
-        <!-- Link til registreringssiden -->
-        <div class="mt-3">
-            <a asp-action="RegistrationForm">Register now</a>
-        </div>
+        <a href="@Url.Action("Register", "Account")" class="btn btn-blue btn-block" style="width: 100%; font-weight: bold;">
+            Registrer deg
+        </a>
     </div>
 </div>
 
-<!-- Stiler for siden -->
+<!-- Custom Styles -->
 <style>
-    /* Bakgrunnsbilde for hele siden */
     body {
         background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
         background-size: cover;
         background-position: center;
+        margin: 0;
+        height: 100vh; /* Full viewport height */
+        overflow: hidden; /* Disable scrolling */
     }
 
-    /* Styling for kortet */
     .card {
-        border-radius: 8px; /* Runde kanter */
-        border: 1px solid #ddd; /* Lys kant rundt kortet */
+        border: 1px solid #ddd;
     }
 
-    /* Styling for etikettene i skjemaet */
-    .form-group label {
-        display: flex; /* Flexbox for å justere ikon og tekst horisontalt */
-        align-items: center; /* Vertikal sentrering av innholdet */
+    .btn-green {
+        background-color: #3da539; /* Green from the logo */
+        border-color: #3da539;
+        color: white;
     }
 
-        .form-group label i {
-            margin-right: 10px; /* Avstand mellom ikonet og teksten */
+        .btn-green:hover {
+            background-color: #318a2e; /* Darker green for hover */
+            border-color: #318a2e;
         }
 
-    /* Styling for knappen */
-    .btn-success {
-        background-color: #4CAF50; /* Grønn farge for knappen */
-        border: none; /* Fjerner standard kant */
+    .btn-blue {
+        background-color: #005baa; /* Blue from the logo */
+        border-color: #005baa;
+        color: white;
     }
 
-        .btn-success:hover {
-            background-color: #45a049; /* Mørkere grønn farge ved hover */
+        .btn-blue:hover {
+            background-color: #004080; /* Darker blue for hover */
+            border-color: #004080;
         }
 </style>
-

@@ -5,70 +5,41 @@
     ViewData["Title"] = "Mine Innmeldinger";
 }
 
-<!-- Styling -->
-<style>
-    /* Background image for the page */
-    body {
-        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
-        background-size: cover;
-        background-position: center;
-    }
-
-    /* Card styling */
-    .card {
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        background-color: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Button styling */
-    .btn-success {
-        background-color: #4CAF50;
-        border: none;
-    }
-
-        .btn-success:hover {
-            background-color: #45a049;
-        }
-</style>
-
-<!-- Main content -->
 <div class="container mt-5">
-    <div class="card p-4">
+    <div class="card p-4" style="background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px;">
         <h2 class="text-center">Mine Innmeldinger</h2>
 
-        <!-- Table of entries -->
-        <table class="table table-striped mt-4">
+        <!-- Search Bar Form -->
+        <form asp-action="MineInnmeldinger" method="get" class="form-inline mb-3">
+            <div class="input-group">
+                <input type="text" name="searchTerm" value="@ViewData["SearchTerm"]" placeholder="Søk etter beskrivelse eller status" class="form-control" />
+                <button type="submit" class="btn btn-primary ml-2">Søk</button>
+            </div>
+        </form>
+
+        <!-- Table displaying user's entries -->
+        <table class="table table-striped table-bordered mt-4">
             <thead>
                 <tr class="text-center">
-                    <th>
-                        <div class="btn btn-success rounded-pill px-3">Registreringsdato</div>
-                    </th>
-                    <th>
-                        <div class="btn btn-success rounded-pill px-3">Forklaring</div>
-                    </th>
-                    <th>
-                        <div class="btn btn-success rounded-pill px-3">Status</div>
-                    </th>
-                    <th>
-                        <div class="btn btn-success rounded-pill px-3">Handlinger</div>
-                    </th>
+                    <th>Registreringsdato</th>
+                    <th>Beskrivelse</th>
+                    <th>Status</th>
+                    <th>Handlinger</th>
                 </tr>
             </thead>
             <tbody>
                 @if (Model.Any())
                 {
-                    @foreach (var innmelding in Model)
+                    @foreach (var item in Model)
                     {
                         <tr class="text-center">
-                            <td>@innmelding.Registreringsdato.ToString("yyyy-MM-dd")</td>
-                            <td><em>@innmelding.Beskrivelse</em></td>
-                            <td>@innmelding.Status</td>
+                            <td>@item.Registreringsdato.ToString("yyyy-MM-dd")</td>
+                            <td>@item.Beskrivelse</td>
+                            <td>@item.Status</td>
                             <td>
-                                <a href="@Url.Action("EditInnmeldingInfo_Saksbehandler", "Home", new { id = innmelding.Id, source = "MineInnmeldinger" })" class="text-primary">Rediger</a> |
-                                <a href="@Url.Action("DetailsInnmeldingSaksbehandler", "Home", new { id = innmelding.Id, source = "MineInnmeldinger" })" class="text-primary">Detaljer</a> |
-                                <a href="#" class="delete-btn text-danger" data-id="@innmelding.Id" data-source="MineInnmeldinger">Slett</a>
+                                <a href="@Url.Action("EditInnmeldingInfo_Saksbehandler", "Home", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-warning btn-sm">Rediger</a>
+                                <a href="@Url.Action("DetailsInnmeldingSaksbehandler", "Home", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-info btn-sm">Detaljer</a>
+                                <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id" data-source="MineInnmeldinger">Slett</a>
                             </td>
                         </tr>
                     }
@@ -84,7 +55,6 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Script -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const deleteButtons = document.querySelectorAll('.delete-btn');
