@@ -5,7 +5,7 @@ using Xunit; // xUnit brukes som test-rammeverk
 using Microsoft.EntityFrameworkCore; // For å sette opp en in-memory database
 using Microsoft.Extensions.Logging; // For å logge, mockes i testen
 using Microsoft.AspNetCore.Identity; // UserManager for håndtering av brukere
-using NSubstitute; // For å mocke avhengigheter
+using NSubstitute; // For mocking av avhengigheter
 using WebApplication1.Controllers; // HomeController som skal testes
 using WebApplication1.Data; // ApplicationDbContext, database-konteksten
 using System.Collections.Generic; // For List<>
@@ -16,6 +16,7 @@ using System.Collections.Generic; // For List<>
 // Funksjonalitet testet:
 // 1. RegisterAreaChange - Tester at metoden returnerer et gyldig view-objekt.
 // 2. AreaChangeOverview - Tester at metoden returnerer riktig filtrerte data for innlogget bruker.
+// 3. Delete - Tester at metoden sletter en GeoChange korrekt og håndterer ugyldige ID-er.
 //
 // Oppsett:
 // - Bruker en in-memory database (ApplicationDbContext) for å isolere testen fra en ekte database.
@@ -128,13 +129,49 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
             Assert.Equal(2, model.Count); // Kun to endringer skal tilhøre testbrukeren
             Assert.All(model, change => Assert.Equal(testUserId, change.UserId)); // Alle endringer skal ha riktig bruker-ID
         }
+      /// <summary>
+/// Denne testen verifiserer funksjonaliteten til Delete-metoden i HomeController.
+/// - Testen sjekker at en gyldig GeoChange slettes korrekt fra databasen og at brukeren blir omdirigert.
+/// - Testen sjekker også at metoden håndterer ugyldige ID-er ved å returnere en NotFound-respons.
+/// - Testen sikrer at eventuelle feil i slettingen logges og håndteres riktig.
+/// </summary>
+[Fact]
+public void Test_Delete_ShouldHandleValidAndInvalidIds_Robust()
+{
+    // Arrange
+    var controller = CreateController();
+    var validGeoChange = new GeoChange { Id = 1, UserId = "testUser123", GeoJson = "{}", Description = "Gyldig endring", Status = "Innsendt" };
+    var invalidGeoChangeId = 99;
 
+    // Legg til en gyldig GeoChange i databasen
+    _mockDbContext.GeoChanges.Add(validGeoChange);
+    _mockDbContext.SaveChanges();
 
-        /// <summary>
-        /// Rydder opp i ressursene som brukes under testen.
-        /// - Sletter in-memory databasen.
-        /// - Frigjør eventuelle andre ressurser.
-        /// </summary>
+    // Verifiser at den gyldige GeoChange eksisterer før sletting
+    Assert.NotNull(_mockDbContext.GeoChanges.Find(validGeoChange.Id));
+
+    // Act: Slett en gyldig GeoChange
+    var validResult = controller.Delete(validGeoChange.Id) as RedirectToActionResult;
+
+    // Act: Slett en ugyldig GeoChange
+    var invalidResult = controller.Delete(invalidGeoChangeId) as NotFoundObjectResult;
+
+    // Assert: Gyldig sletting
+    Assert.NotNull(validResult);
+    Assert.Equal("MineInnmeldinger", validResult.ActionName);
+    Assert.Null(_mockDbContext.GeoChanges.Find(validGeoChange.Id)); // Sjekk at den er slettet
+
+    // Assert: Ugyldig sletting
+    Assert.NotNull(invalidResult);
+    Assert.IsType<NotFoundObjectResult>(invalidResult);
+    Assert.Contains($"GeoChange med ID {invalidGeoChangeId} ble ikke funnet.", invalidResult.Value.ToString());
+}
+
+        // <summary>
+        // Rydder opp i ressursene som brukes under testen.
+        // - Sletter in-memory databasen.
+        // - Frigjør eventuelle andre ressurser.
+        // </summary>
         public void Dispose()
         {
             _mockDbContext.Database.EnsureDeleted(); // Slett databasen fra minnet

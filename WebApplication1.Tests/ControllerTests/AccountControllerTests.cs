@@ -127,7 +127,8 @@ namespace WebApplication1.Tests.ControllerTests
         /// </summary>
         public void Dispose()
         {
-            // Ingen eksplisitt opprydding nødvendig
+            // Ingen opprydding nødvendig for in-memory database eller mock-objekter.
+            // Legg til oppryddingslogikk her hvis det i fremtiden brukes ressurser som trenger frigjøring.
         }
     }
 }

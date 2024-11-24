@@ -226,71 +226,47 @@ namespace WebApplication1.Controllers
 
             return View(data);
         }
-
-
-
-
-        // Updated Delete method
         [HttpPost]
-        [HttpGet]
-        [HttpPost]
-        [HttpGet]
+        [Authorize(Roles = "User,Saksbehandler")]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             try
             {
-                // Try to find the record for Innmelding
-                var innmelding = _context.GeoChanges.FirstOrDefault(i => i.Id == id);
-
-                // Try to find the record for BrukerInnmelding
-                var brukerInnmelding = _context.GeoChanges.FirstOrDefault(b => b.Id == id);
-
-                // Try to find the record for GeoChange
+                // Forsøk å finne posten i databasen
                 var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-
-                if (innmelding == null && brukerInnmelding == null && geoChange == null)
+                if (geoChange == null)
                 {
-                    return NotFound(); // Return 404 if no record is found
+                    // Logg og returner 404 hvis posten ikke eksisterer
+                    _logger.LogWarning($"GeoChange med ID {id} ble ikke funnet for sletting.");
+                    return NotFound($"GeoChange med ID {id} ble ikke funnet.");
                 }
 
-                // Remove the appropriate record based on what was found
-                if (innmelding != null)
-                {
-                    _context.GeoChanges.Remove(innmelding);
-                }
-                else if (brukerInnmelding != null)
-                {
-                    _context.GeoChanges.Remove(brukerInnmelding);
-                }
-                else if (geoChange != null)
-                {
-                    _context.GeoChanges.Remove(geoChange);
-                }
-
-                // Save changes to the database
+                // Fjern posten og lagre endringer
+                _context.GeoChanges.Remove(geoChange);
                 _context.SaveChanges();
 
-                // Get the source parameter from the query string
-                string source = Request.Query["source"];
+                // Bekreft sletting ved å sikre at den ikke lenger finnes i databasen
+                if (_context.GeoChanges.Any(g => g.Id == id))
+                {
+                    // Logg en kritisk feil hvis posten ikke ble fjernet
+                    _logger.LogError($"GeoChange med ID {id} ble ikke slettet.");
+                    return StatusCode(500, "En feil oppstod under forsøket på å slette posten. Vennligst prøv igjen.");
+                }
 
-                // Redirect based on the source
-                if (source == "MineInnmeldinger")
-                {
-                    return RedirectToAction("MineInnmeldinger"); // Redirect back to "MineInnmeldinger" page
-                }
-                else
-                {
-                    return RedirectToAction("SaksBehandlerOversikt"); // Redirect back to "SaksBehandlerOversikt" page
-                }
+                // Logg vellykket sletting
+                _logger.LogInformation($"GeoChange med ID {id} ble slettet.");
+
+                // Omdiriger til en passende handling etter vellykket sletting
+                return RedirectToAction("MineInnmeldinger");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
-                // Handle the exception (you could log it or display an error page)
-                return StatusCode(500, "An error occurred while trying to delete the record.");
+                // Logg feilen med detaljer
+                _logger.LogError(ex, $"En feil oppstod under sletting av GeoChange med ID {id}.");
+                return StatusCode(500, "En intern serverfeil oppstod. Vennligst kontakt support.");
             }
         }
-
 
         public IActionResult Edit(int id)
         {
