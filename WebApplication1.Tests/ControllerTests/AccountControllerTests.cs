@@ -22,6 +22,22 @@ namespace WebApplication1.Tests.ControllerTests
     /// </summary>
     public class AccountControllerTests : IDisposable
     {
+        private readonly UserManager<IdentityUser> _mockUserManager;
+        private readonly SignInManager<IdentityUser> _mockSignInManager;
+        private readonly AccountController _controller;
+
+        /// <summary>
+        /// Constructor som initialiserer felles oppsett for testene.
+        /// - Oppretter mock av UserManager og SignInManager.
+        /// - Instansierer AccountController med mockede avhengigheter.
+        /// </summary>
+        public AccountControllerTests()
+        {
+            _mockUserManager = CreateMockUserManager();
+            _mockSignInManager = CreateMockSignInManager(_mockUserManager);
+            _controller = new AccountController(_mockUserManager, _mockSignInManager);
+        }
+
         /// <summary>
         /// Oppretter en mock av UserManager for testing.
         /// </summary>
@@ -59,25 +75,21 @@ namespace WebApplication1.Tests.ControllerTests
         public async Task Login_Post_InvalidCredentials_ShouldReturnViewWithError()
         {
             // Arrange
-            var userManager = CreateMockUserManager();
-            var signInManager = CreateMockSignInManager(userManager);
-            var controller = new AccountController(userManager, signInManager);
             var model = new LoginViewModel
             {
                 Email = "invalid@example.com",
                 Password = "InvalidPassword"
             };
 
-            // Mock oppførsel: Returner feil ved pålogging
-            signInManager.PasswordSignInAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>())
+            _mockSignInManager.PasswordSignInAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>())
                 .Returns(Microsoft.AspNetCore.Identity.SignInResult.Failed);
 
             // Act
-            var result = await controller.Login(model) as ViewResult;
+            var result = await _controller.Login(model) as ViewResult;
 
             // Assert
             Assert.NotNull(result); // Sjekk at viewet ikke er null
-            Assert.False(controller.ModelState.IsValid); // Sjekk at ModelState er ugyldig
+            Assert.False(_controller.ModelState.IsValid); // Sjekk at ModelState er ugyldig
         }
 
         /// <summary>
@@ -86,13 +98,8 @@ namespace WebApplication1.Tests.ControllerTests
         [Fact]
         public void Register_ShouldReturnView()
         {
-            // Arrange
-            var userManager = CreateMockUserManager();
-            var signInManager = CreateMockSignInManager(userManager);
-            var controller = new AccountController(userManager, signInManager);
-
             // Act
-            var result = controller.Register() as ViewResult;
+            var result = _controller.Register() as ViewResult;
 
             // Assert
             Assert.NotNull(result); // Sjekk at viewet ikke er null
@@ -104,31 +111,23 @@ namespace WebApplication1.Tests.ControllerTests
         [Fact]
         public async Task Logout_ShouldRedirectToHomeIndex()
         {
-            // Arrange
-            var userManager = CreateMockUserManager();
-            var signInManager = CreateMockSignInManager(userManager);
-            var controller = new AccountController(userManager, signInManager);
-
             // Act
-            var result = await controller.Logout() as RedirectToActionResult;
+            var result = await _controller.Logout() as RedirectToActionResult;
 
             // Assert
             Assert.NotNull(result); // Sjekk at resultatet ikke er null
-            Assert.Equal("Index", result.ActionName); // Sjekk at action er \"Index\"
-            Assert.Equal("Home", result.ControllerName); // Sjekk at controller er \"Home\"
+            Assert.Equal("Index", result.ActionName); // Sjekk at action er "Index"
+            Assert.Equal("Home", result.ControllerName); // Sjekk at controller er "Home"
         }
 
-        // <summary>
-        // Rydder opp i ressurser som brukes under testen.
-        // For øyeblikket er det ingen eksterne ressurser som krever eksplisitt opprydding,
-        // siden vi bruker en in-memory database og mock-objekter.
-        // Denne metoden er inkludert for fremtidig fleksibilitet hvis det legges til ressurser
-        // som trenger å bli frigjort eksplisitt.
-        // </summary>
+        /// <summary>
+        /// Rydder opp i ressurser som brukes under testen.
+        /// For øyeblikket er det ingen eksterne ressurser som krever eksplisitt opprydding,
+        /// siden vi bruker mock-objekter. Denne metoden er inkludert for fremtidig fleksibilitet.
+        /// </summary>
         public void Dispose()
         {
-            // Ingen opprydding nødvendig for in-memory database eller mock-objekter.
-            // Legg til oppryddingslogikk her hvis det i fremtiden brukes ressurser som trenger frigjøring.
+            // Ingen eksplisitt opprydding nødvendig
         }
     }
 }
