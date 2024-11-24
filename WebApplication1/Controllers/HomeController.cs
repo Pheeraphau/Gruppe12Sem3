@@ -30,14 +30,17 @@ namespace WebApplication1.Controllers
 
         private static List<PositionModel> positions = new List<PositionModel>();
 
-        
+        /// <summary>
+        /// Returnerer view for å registrere områdeendring.
+        /// Denne metoden blir testet i enhetstesten Test_RegisterAreaChange_ShouldReturnView.
+        /// </summary>
         [HttpGet]
         [Authorize]
         public IActionResult RegisterAreaChange()
         {
             return View();
         }
-
+        /// Returnerer view for Privacy-siden.
         [HttpGet]
         public IActionResult Privacy()
         {

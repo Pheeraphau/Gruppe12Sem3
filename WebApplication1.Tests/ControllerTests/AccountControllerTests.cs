@@ -1,45 +1,30 @@
-/*
- * AccountControllerTests - Enhetstester for AccountController
- *
- * Denne testklassen inneholder følgende tester:
- * 
- * 1. Login_Post_InvalidCredentials_ShouldReturnViewWithError:
- *    Tester om login-metoden håndterer feilaktige legitimasjon korrekt ved å returnere riktig view og legge til en feilmelding i ModelState.
- *    - Bruker mock av UserManager og SignInManager for å simulere feil pålogging.
- *
- * 2. Register_ShouldReturnView:
- *    Tester om Register-metoden returnerer riktig view når den blir kalt uten data (GET-metode).
- *    - Bruker mock av UserManager og SignInManager for å sette opp AccountController.
- *
- * 3. Logout_ShouldRedirectToHomeIndex:
- *    Tester om Logout-metoden logger ut brukeren og redirecter til Home/Index-siden.
- *    - Bruker mock av UserManager og SignInManager for å simulere logout-prosessen.
- *
- * Mock-objekter:
- * - UserManager<IdentityUser>: Mockes for å simulere brukerrelaterte operasjoner som opprettelse, pålogging og tildeling av roller.
- * - SignInManager<IdentityUser>: Mockes for å simulere autentisering og utlogging av brukere.
- *
- * Verktøy:
- * - NSubstitute: Brukes for å opprette mock-objekter.
- * - xUnit: Brukes for å definere og kjøre testene.
- *
- * Struktur:
- * - Testene er organisert etter Arrange, Act, Assert-mønsteret for å gjøre koden lesbar og enkel å forstå.
- */
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using NSubstitute;
-using WebApplication1.Controllers;
-using WebApplication1.Models;
-using Xunit;
-using System.Threading.Tasks; // For Task
+using System; // For IDisposable
+using Microsoft.AspNetCore.Identity; // For UserManager og SignInManager
+using Microsoft.AspNetCore.Mvc; // For ViewResult og RedirectToActionResult
+using NSubstitute; // For mocking av avhengigheter
+using WebApplication1.Controllers; // AccountController som testes
+using WebApplication1.Models; // LoginViewModel
+using Xunit; // For test-rammeverket
+using System.Threading.Tasks; // For async metoder
 
 namespace WebApplication1.Tests.ControllerTests
 {
-    public class AccountControllerTests
+    /// <summary>
+    /// Testklasse for AccountController som verifiserer funksjonaliteten til metoder i controlleren.
+    /// Funksjonalitet testet:
+    /// 1. Login med ugyldige legitimasjonsopplysninger.
+    /// 2. Register-metode som returnerer riktig view.
+    /// 3. Logout som korrekt redirecter brukeren til Home/Index.
+    /// Oppsett:
+    /// - Mocker UserManager og SignInManager for å simulere autentisering og brukerstyring.
+    /// - Bruker NSubstitute for å opprette mock-objekter.
+    /// - Tester er organisert etter Arrange, Act, Assert-mønsteret.
+    /// </summary>
+    public class AccountControllerTests : IDisposable
     {
-        // Oppretter en mock av UserManager for testing
+        /// <summary>
+        /// Oppretter en mock av UserManager for testing.
+        /// </summary>
         private UserManager<IdentityUser> CreateMockUserManager()
         {
             return Substitute.For<UserManager<IdentityUser>>(
@@ -47,7 +32,10 @@ namespace WebApplication1.Tests.ControllerTests
                 null, null, null, null, null, null, null, null
             );
         }
-       // Oppretter en mock av SignInManager for testing
+
+        /// <summary>
+        /// Oppretter en mock av SignInManager for testing.
+        /// </summary>
         private SignInManager<IdentityUser> CreateMockSignInManager(UserManager<IdentityUser> userManager)
         {
             var contextAccessor = Substitute.For<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
@@ -64,11 +52,13 @@ namespace WebApplication1.Tests.ControllerTests
             );
         }
 
-        // Test 1: Tester login-metoden for å sjekke at feil pålogging returnerer riktig view med en feilmelding
+        /// <summary>
+        /// Tester login-metoden for feilaktige legitimasjonsopplysninger.
+        /// </summary>
         [Fact]
         public async Task Login_Post_InvalidCredentials_ShouldReturnViewWithError()
         {
-            // Arrange: Setter opp mockeobjekter og en controller
+            // Arrange
             var userManager = CreateMockUserManager();
             var signInManager = CreateMockSignInManager(userManager);
             var controller = new AccountController(userManager, signInManager);
@@ -77,50 +67,68 @@ namespace WebApplication1.Tests.ControllerTests
                 Email = "invalid@example.com",
                 Password = "InvalidPassword"
             };
-            // Mock oppførsel: Returnerer feil ved pålogging
+
+            // Mock oppførsel: Returner feil ved pålogging
             signInManager.PasswordSignInAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>())
                 .Returns(Microsoft.AspNetCore.Identity.SignInResult.Failed);
 
-            // Act metoden: Kaller login-metoden med feil legitimasjon
+            // Act
             var result = await controller.Login(model) as ViewResult;
 
-            // Assert: Sjekker at resultatet ikke er null og at modellen har feil
-            Assert.NotNull(result);
-            Assert.False(controller.ModelState.IsValid);
+            // Assert
+            Assert.NotNull(result); // Sjekk at viewet ikke er null
+            Assert.False(controller.ModelState.IsValid); // Sjekk at ModelState er ugyldig
         }
 
-        // Test 2: Tester om Register-metoden returnerer riktig view
+        /// <summary>
+        /// Tester Register-metoden for å sjekke at den returnerer riktig view.
+        /// </summary>
         [Fact]
         public void Register_ShouldReturnView()
         {
-            // Arrange: Setter opp mockeobjekter og en controller
+            // Arrange
             var userManager = CreateMockUserManager();
             var signInManager = CreateMockSignInManager(userManager);
             var controller = new AccountController(userManager, signInManager);
 
-            // Act: Kaller Register-metoden
+            // Act
             var result = controller.Register() as ViewResult;
 
-            // Assert: Sjekker at resultatet ikke er null
-            Assert.NotNull(result);
+            // Assert
+            Assert.NotNull(result); // Sjekk at viewet ikke er null
         }
 
-        // Test 3: Tester Logout-metoden for å sjekke at den redirecter til Home/Index
+        /// <summary>
+        /// Tester Logout-metoden for å sjekke at brukeren redirectes til Home/Index.
+        /// </summary>
         [Fact]
         public async Task Logout_ShouldRedirectToHomeIndex()
         {
-            // Arrange: Setter opp mockeobjekter og en controller
+            // Arrange
             var userManager = CreateMockUserManager();
             var signInManager = CreateMockSignInManager(userManager);
             var controller = new AccountController(userManager, signInManager);
 
-            // Act: Kaller Logout-metoden
+            // Act
             var result = await controller.Logout() as RedirectToActionResult;
 
-            // Assert: Sjekker at redirecten er riktig
-            Assert.NotNull(result);
-            Assert.Equal("Index", result.ActionName);
-            Assert.Equal("Home", result.ControllerName);
+            // Assert
+            Assert.NotNull(result); // Sjekk at resultatet ikke er null
+            Assert.Equal("Index", result.ActionName); // Sjekk at action er \"Index\"
+            Assert.Equal("Home", result.ControllerName); // Sjekk at controller er \"Home\"
+        }
+
+        // <summary>
+        // Rydder opp i ressurser som brukes under testen.
+        // For øyeblikket er det ingen eksterne ressurser som krever eksplisitt opprydding,
+        // siden vi bruker en in-memory database og mock-objekter.
+        // Denne metoden er inkludert for fremtidig fleksibilitet hvis det legges til ressurser
+        // som trenger å bli frigjort eksplisitt.
+        // </summary>
+        public void Dispose()
+        {
+            // Ingen opprydding nødvendig for in-memory database eller mock-objekter.
+            // Legg til oppryddingslogikk her hvis det i fremtiden brukes ressurser som trenger frigjøring.
         }
     }
 }

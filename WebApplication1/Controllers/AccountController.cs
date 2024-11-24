@@ -14,7 +14,12 @@ namespace WebApplication1.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-
+        // <summary>
+        // Returnerer view for å registrere en ny bruker.
+        //    - Denne metoden blir testet i enhetstesten Register_ShouldReturnView.
+        //    - Brukes for å vise registreringsskjemaet til nye brukere.
+        // </summary>
+        // <returns>Returnerer et view for registrering av en ny bruker.</returns>
         [HttpGet]
         public IActionResult Register()
         {
@@ -72,7 +77,17 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
-
+        // <summary>
+        // Håndterer innlogging av brukere.
+        //    - Denne metoden blir testet i enhetstesten Login_Post_InvalidCredentials_ShouldReturnViewWithError.
+        //    - Validerer brukerens innloggingsdetaljer, autentiserer brukeren og redirecter til riktig side basert på brukerens rolle.
+        // </summary>
+        // <param name="model">Modellen som inneholder brukerens e-post, passord og innloggingspreferanser.</param>
+        // <returns>
+        // Returnerer:
+        // - Redirect til relevante sider ved vellykket innlogging.
+        // - Samme view med en feilmelding ved mislykket innlogging.
+        // </returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -113,7 +128,12 @@ namespace WebApplication1.Controllers
             return View(model);
         }
 
-
+        // <summary>
+        // Logger ut brukeren og redirecter til hjemmesiden.
+        //    - Denne metoden blir testet i enhetstesten Logout_ShouldRedirectToHomeIndex.
+        //    - Håndterer utlogging ved å rydde opp i autentiseringsstatusen og sende brukeren tilbake til hjemmesiden.
+        // </summary>
+        // <returns>Redirect til Home/Index.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
