@@ -44,11 +44,24 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        [HttpGet]
         public IActionResult Index()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("AboutKartverket");
+            }
+            return View();
+        }
+
+
+
+        [Authorize]
+        public IActionResult AboutKartverket()
         {
             return View();
         }
+
+
 
         // Display overview of area changes
         [HttpGet]

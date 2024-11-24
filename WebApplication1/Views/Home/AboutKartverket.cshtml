@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Om Kartverket";
+}
+
+<!-- Main container -->
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 250px); margin-top: -10px;">
+    <div class="card shadow-lg p-4" style="max-width: 60rem; background-color: rgba(255, 255, 255, 0.95); border-radius: 10px;">
+        <div class="row">
+            <!-- Left column: Text content -->
+            <div class="col-md-7 d-flex flex-column justify-content-center">
+                <h1 class="mb-3" style="font-size: 1.5rem; font-weight: bold; color: #333;">Velkommen til Kartverket</h1>
+                <p style="font-size: 0.9rem; color: #555; text-align: justify;">
+                    Kartverket, også kjent som Statens kartverk, er Norges nasjonale institusjon for kart, eiendomsdata,
+                    geodetiske referansesystemer, og havnivåmålinger. Vi sørger for at oppdatert og nøyaktig informasjon
+                    om Norges geografiske landskap er tilgjengelig for offentlige myndigheter, næringsliv og publikum.
+                </p>
+                <p style="font-size: 0.9rem; color: #555; text-align: justify;">
+                    Våre oppgaver inkluderer:
+                </p>
+                <ul style="font-size: 0.9rem; color: #555;">
+                    <li>Utarbeidelse og oppdatering av land- og sjøkart.</li>
+                    <li>Forvaltning av grunnboken og eiendomsdata.</li>
+                    <li>Utvikling av geodetiske referansesystemer som sikrer nøyaktige posisjoner.</li>
+                    <li>Overvåking av havnivå og klimarelaterte endringer.</li>
+                </ul>
+                <p class="mt-3" style="font-size: 0.9rem; color: #555; text-align: justify;">
+                    Kartverket spiller en kritisk rolle i samfunnsutviklingen ved å levere pålitelig geografisk informasjon
+                    og sikre effektiv forvaltning av arealressurser. Besøk vår nettside for mer informasjon eller kontakt
+                    oss for spørsmål.
+                </p>
+                <a href="https://www.kartverket.no/om-kartverket" target="_blank" class="btn btn-green btn-block mt-2" style="width: 100%; font-weight: bold;">
+                    Lær mer om Kartverket
+                </a>
+            </div>
+            <!-- Right column: Image and logo -->
+            <div class="col-md-5 text-center">
+                <img src="https://www.kartverket.no/public/images/logo/kartverket-logo-large.svg"
+                     alt="Kartverket Logo" style="width: 150px; height: auto; margin-bottom: 15px;">
+                <img src="https://www.kartverket.no/globalassets/geodataarbeid/omlopsfotografering/omlopsfotografering-langtidsplan-20240306.jpg"
+                     alt="Omløpsfotografering Plan" class="img-fluid rounded" style="border: 1px solid #ddd; max-height: 350px; max-width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    body {
+        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+    }
+
+    .btn-green {
+        background-color: #3da539; /* Green from the logo */
+        border-color: #3da539;
+        color: white;
+    }
+
+        .btn-green:hover {
+            background-color: #318a2e; /* Darker green for hover */
+            border-color: #318a2e;
+        }
+</style>
