@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore; // For å sette opp en in-memory database
 using Microsoft.Extensions.Logging; // For å logge, mockes i testen
 using Microsoft.AspNetCore.Identity; // UserManager for håndtering av brukere
 using NSubstitute; // For mocking av avhengigheter
-using WebApplication1.Controllers; // HomeController som skal testes
+using WebApplication1.Controllers; // HomeController og GeoChangeController som skal testes
 using WebApplication1.Data; // ApplicationDbContext, database-konteksten
 using System.Collections.Generic; // For List<>
 
 // <summary>
-// Testklasse for HomeController som verifiserer funksjonaliteten til metoder i controlleren.
+// Testklasse for HomeController og GeoChangeController som verifiserer funksjonaliteten til metoder i controllerne.
 // 
 // Funksjonalitet testet:
 // 1. RegisterAreaChange - Tester at metoden returnerer et gyldig view-objekt.
@@ -32,13 +32,13 @@ using System.Collections.Generic; // For List<>
 // </summary>
 namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
 {
-    public class HomeControllerTests : IDisposable
+    public class GeoChangeControllerTests : IDisposable
     {
         // In-memory database for å simulere en ekte database
         private readonly ApplicationDbContext _mockDbContext;
 
         // Mock av ILogger for å teste uten avhengighet til ekte logging
-        private readonly ILogger<HomeController> _mockLogger;
+        private readonly ILogger<GeoChangeController> _mockLogger;
 
         // Mock av UserManager for å teste uten en faktisk brukermanager
         private readonly UserManager<IdentityUser> _mockUserManager;
@@ -48,7 +48,7 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
         /// - Initialiserer en in-memory database.
         /// - Mocker nødvendige avhengigheter som logger og UserManager.
         /// </summary>
-        public HomeControllerTests()
+        public GeoChangeControllerTests()
         {
             // Konfigurer en in-memory database
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -59,7 +59,7 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
             _mockDbContext = new ApplicationDbContext(options);
 
             // Oppretter en mock av ILogger
-            _mockLogger = Substitute.For<ILogger<HomeController>>();
+            _mockLogger = Substitute.For<ILogger<GeoChangeController>>();
 
             // Oppretter en mock av UserManager
             _mockUserManager = Substitute.For<UserManager<IdentityUser>>(
@@ -69,17 +69,17 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
         }
 
         /// <summary>
-        /// Oppretter en instans av HomeController med mockede avhengigheter.
+        /// Oppretter en instans av GeoChangeController med mockede avhengigheter.
         /// Gjør det enklere å opprette controllere i flere tester.
         /// </summary>
-        /// <returns>En instans av HomeController</returns>
-        private HomeController CreateController()
+        /// <returns>En instans av GeoChangeController</returns>
+        private GeoChangeController CreateGeoChangeController()
         {
-            return new HomeController(_mockLogger, _mockDbContext, _mockUserManager);
+            return new GeoChangeController(_mockDbContext, _mockUserManager, _mockLogger);
         }
 
         /// <summary>
-        /// Tester metoden RegisterAreaChange i HomeController.
+        /// Tester metoden RegisterAreaChange i GeoChangeController.
         /// - Sjekker at metoden returnerer et gyldig view-objekt.
         /// - Testen kjører i et isolert miljø med mockede avhengigheter.
         /// </summary>
@@ -87,7 +87,7 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
         public void Test_RegisterAreaChange_ShouldReturnView()
         {
             // Arrange - Opprett en instans av controlleren
-            var controller = CreateController();
+            var controller = CreateGeoChangeController();
 
             // Act - Kall metoden RegisterAreaChange
             var result = controller.RegisterAreaChange();
@@ -97,7 +97,7 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
         }
 
         /// <summary>
-        /// Tester metoden AreaChangeOverview i HomeController.
+        /// Tester metoden AreaChangeOverview i GeoChangeController.
         /// - Sjekker at metoden returnerer filtrerte endringer for innlogget bruker.
         /// - Testen kjører i et isolert miljø med mockede avhengigheter og data.
         /// </summary>
@@ -105,7 +105,7 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
         public void Test_AreaChangeOverview_ShouldReturnViewWithFilteredData()
         {
             // Arrange - Opprett en instans av controlleren
-            var controller = CreateController();
+            var controller = CreateGeoChangeController();
             var testUserId = "testUser123"; // Simulert bruker-ID
 
             // Mock UserManager for å returnere testbrukerens ID
@@ -129,43 +129,51 @@ namespace WebApplication1.Tests.ControllerTests // Oppdatert namespace
             Assert.Equal(2, model.Count); // Kun to endringer skal tilhøre testbrukeren
             Assert.All(model, change => Assert.Equal(testUserId, change.UserId)); // Alle endringer skal ha riktig bruker-ID
         }
-      /// <summary>
-/// Denne testen verifiserer funksjonaliteten til Delete-metoden i HomeController.
-/// - Testen sjekker at en gyldig GeoChange slettes korrekt fra databasen og at brukeren blir omdirigert.
-/// - Testen sjekker også at metoden håndterer ugyldige ID-er ved å returnere en NotFound-respons.
-/// - Testen sikrer at eventuelle feil i slettingen logges og håndteres riktig.
-/// </summary>
-[Fact]
-public void Test_Delete_ShouldHandleValidAndInvalidIds_Robust()
-{
-    // Arrange
-    var controller = CreateController();
-    var validGeoChange = new GeoChange { Id = 1, UserId = "testUser123", GeoJson = "{}", Description = "Gyldig endring", Status = "Innsendt" };
-    var invalidGeoChangeId = 99;
 
-    // Legg til en gyldig GeoChange i databasen
-    _mockDbContext.GeoChanges.Add(validGeoChange);
-    _mockDbContext.SaveChanges();
+        /// <summary>
+        /// Denne testen verifiserer funksjonaliteten til Delete-metoden i GeoChangeController.
+        /// - Testen sjekker at en gyldig GeoChange slettes korrekt fra databasen og at brukeren blir omdirigert.
+        /// - Testen sjekker også at metoden håndterer ugyldige ID-er ved å returnere en NotFound-respons.
+        /// - Testen sikrer at eventuelle feil i slettingen logges og håndteres riktig.
+        /// </summary>
+        [Fact]
+        public void Test_Delete_ShouldHandleValidAndInvalidIds_Robust()
+        {
+            // Arrange
+            var controller = CreateGeoChangeController();
+            var validGeoChange = new GeoChange { Id = 1, UserId = "testUser123", GeoJson = "{}", Description = "Gyldig endring", Status = "Innsendt" };
+            var invalidGeoChangeId = 99;
 
-    // Verifiser at den gyldige GeoChange eksisterer før sletting
-    Assert.NotNull(_mockDbContext.GeoChanges.Find(validGeoChange.Id));
+            // Legg til en gyldig GeoChange i databasen
+            _mockDbContext.GeoChanges.Add(validGeoChange);
+            _mockDbContext.SaveChanges();
 
-    // Act: Slett en gyldig GeoChange
-    var validResult = controller.Delete(validGeoChange.Id) as RedirectToActionResult;
+            // Verifiser at den gyldige GeoChange eksisterer før sletting
+            Assert.NotNull(_mockDbContext.GeoChanges.Find(validGeoChange.Id));
 
-    // Act: Slett en ugyldig GeoChange
-    var invalidResult = controller.Delete(invalidGeoChangeId) as NotFoundObjectResult;
+            // Mock bruker-ID for å simulere innlogging
+            _mockUserManager.GetUserId(Arg.Any<ClaimsPrincipal>()).Returns("testUser123");
 
-    // Assert: Gyldig sletting
-    Assert.NotNull(validResult);
-    Assert.Equal("MineInnmeldinger", validResult.ActionName);
-    Assert.Null(_mockDbContext.GeoChanges.Find(validGeoChange.Id)); // Sjekk at den er slettet
+            // Act: Slett en gyldig GeoChange
+            var validResult = controller.Delete(validGeoChange.Id, "MineInnmeldinger") as RedirectToActionResult;
 
-    // Assert: Ugyldig sletting
-    Assert.NotNull(invalidResult);
-    Assert.IsType<NotFoundObjectResult>(invalidResult);
-    Assert.Contains($"GeoChange med ID {invalidGeoChangeId} ble ikke funnet.", invalidResult.Value.ToString());
-}
+            // Act: Slett en ugyldig GeoChange
+            var invalidResult = controller.Delete(invalidGeoChangeId) as NotFoundObjectResult;
+
+            // Assert: Gyldig sletting
+            Assert.NotNull(validResult);
+            Assert.Equal("MineInnmeldinger", validResult.ActionName);
+            Assert.Null(_mockDbContext.GeoChanges.Find(validGeoChange.Id)); // Sjekk at den er slettet
+
+            // Assert: Ugyldig sletting
+            Assert.NotNull(invalidResult);
+            Assert.IsType<NotFoundObjectResult>(invalidResult);
+
+            // Bekreft strengen eksakt
+            var actualMessage = invalidResult.Value.ToString();
+            Console.WriteLine($"Actual NotFound message: {actualMessage}");
+            Assert.Contains($"GeoChange with ID {invalidGeoChangeId} was not found.", actualMessage);
+        }
 
         // <summary>
         // Rydder opp i ressursene som brukes under testen.

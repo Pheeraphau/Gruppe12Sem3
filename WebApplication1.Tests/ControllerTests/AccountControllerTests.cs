@@ -124,7 +124,7 @@ namespace WebApplication1.Tests.ControllerTests
         /// Rydder opp i ressurser som brukes under testen.
         /// For øyeblikket er det ingen eksterne ressurser som krever eksplisitt opprydding,
         /// siden vi bruker mock-objekter. Denne metoden er inkludert for fremtidig fleksibilitet.
-        /// </summary>
+        /// </summary> 
         public void Dispose()
         {
             // Ingen opprydding nødvendig for in-memory database eller mock-objekter.
