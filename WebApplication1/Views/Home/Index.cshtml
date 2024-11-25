@@ -3,18 +3,18 @@
     ViewData["Title"] = "Velkommen";
 }
 
-<!-- Main container -->
+<!-- Hovedcontainer -->
 <div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 150px);">
     <div class="card shadow-lg p-5" style="width: 22rem; background-color: rgba(255, 255, 255, 0.9); border-radius: 15px;">
-        <!-- Welcome text -->
+        <!-- Velkomsttekst -->
         <h1 class="mb-4" style="font-size: 1.8rem; font-weight: bold; color: #333;">Velkommen til Kartverket</h1>
 
-        <!-- Description -->
+        <!-- Beskrivelse -->
         <p class="mb-4" style="font-size: 1rem; color: #555;">
             Vennligst logg inn eller registrer deg for å komme i gang.
         </p>
 
-        <!-- Buttons -->
+        <!-- Knapper -->
         <a href="@Url.Action("Login", "Account")" class="btn btn-green btn-block mb-3" style="width: 100%; font-weight: bold;">
             Logg inn
         </a>
@@ -24,15 +24,15 @@
     </div>
 </div>
 
-<!-- Custom Styles -->
+<!-- Tilpassede stiler -->
 <style>
     body {
         background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
         background-size: cover;
         background-position: center;
         margin: 0;
-        height: 100vh; /* Full viewport height */
-        overflow: hidden; /* Disable scrolling */
+        height: 100vh; /* Full høyde av visningsområdet */
+        overflow: hidden; /* Deaktiver scrolling */
     }
 
     .card {
@@ -40,24 +40,24 @@
     }
 
     .btn-green {
-        background-color: #3da539; /* Green from the logo */
+        background-color: #3da539; /* Grønn fra logoen */
         border-color: #3da539;
         color: white;
     }
 
         .btn-green:hover {
-            background-color: #318a2e; /* Darker green for hover */
+            background-color: #318a2e; /* Mørkere grønn for hover */
             border-color: #318a2e;
         }
 
     .btn-blue {
-        background-color: #005baa; /* Blue from the logo */
+        background-color: #005baa; /* Blå fra logoen */
         border-color: #005baa;
         color: white;
     }
 
         .btn-blue:hover {
-            background-color: #004080; /* Darker blue for hover */
+            background-color: #004080; /* Mørkere blå for hover */
             border-color: #004080;
         }
 </style>

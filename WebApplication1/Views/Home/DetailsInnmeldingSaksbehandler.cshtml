@@ -1,34 +1,43 @@
 ﻿@model WebApplication1.Data.GeoChange
 
 @{
-    ViewData["Title"] = "Details - Saksbehandler";
+    ViewData["Title"] = "Edit"; // Setter tittelen på nettleserfanen til 'Edit'
+    var source = ViewData["Source"] as string; // Henter kilden (f.eks. 'MineInnmeldinger' eller 'SaksBehandlerOversikt') for navigasjon
 }
 
 <div class="container mt-5">
-    <!-- Back Button -->
-    <div class="d-flex justify-content-end" style="margin-top: 20px; margin-bottom: 15px;">
-        @if (ViewData["Source"]?.ToString() == "MineInnmeldinger")
+    <h2>Edit GeoChange</h2>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" name="source" value="@source" />
+
+        <div class="form-group">
+            <label asp-for="GeoJson">GeoJson</label>
+            <textarea asp-for="GeoJson" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        @if (source != "MineInnmeldinger")
         {
-            <a href="@Url.Action("MineInnmeldinger", "Home")" class="btn btn-secondary">Back</a>
+            <div class="form-group">
+                <label asp-for="Status">Status</label>
+                <input asp-for="Status" class="form-control" />
+            </div>
         }
         else
         {
-            <a href="@Url.Action("SaksBehandlerOversikt", "Home")" class="btn btn-secondary">Back</a>
+            <input type="hidden" asp-for="Status" />
         }
-    </div>
 
-    <h2>Details for ID: @Model.Id</h2>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="@source" class="btn btn-secondary">Back</a>
+    </form>
 
-    <div class="mb-3">
-        <strong>Description:</strong> @Model.Description
-    </div>
-
-    <div class="mb-3">
-        <strong>Status:</strong> @Model.Status
-    </div>
-
-    <!-- Map Section -->
-    <div class="mb-3">
+    <div class="mt-4">
         <h4>Map:</h4>
         <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
     </div>
@@ -36,22 +45,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 2); // Default center and zoom level
+        // Initialiserer kartet med standard senter og zoomnivå
+        var map = L.map('map').setView([0, 0], 2);
 
-        // Add OpenStreetMap tiles
+        // Legger til OpenStreetMap-fliser
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Parse the GeoJSON from the model
+        // Parser GeoJSON fra modellen
         var geoJsonData = @Html.Raw(Model.GeoJson);
 
-        // Add GeoJSON to the map
+        // Legger til GeoJSON-lag på kartet
         var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
 
-        // Fit the map to the bounds of the GeoJSON layer
+        // Tilpasser kartet til grensene for GeoJSON-laget
         map.fitBounds(geoJsonLayer.getBounds());
     });
 </script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
