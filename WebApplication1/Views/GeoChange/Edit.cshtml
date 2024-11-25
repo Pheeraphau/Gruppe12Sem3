@@ -1,4 +1,6 @@
-﻿@model WebApplication1.Data.GeoChange
+﻿@using System.Text.Json
+
+@model WebApplication1.Data.GeoChange
 
 @{
     ViewData["Title"] = "Edit GeoChange";
@@ -53,7 +55,7 @@
         }).addTo(map);
 
         // Parse the GeoJSON from the model
-        var geoJsonData = @Html.Raw(Model.GeoJson);
+        var geoJsonData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.GeoJson));
 
         // Add GeoJSON to the map
         var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);

@@ -68,7 +68,7 @@ namespace WebApplication1.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    _logger.LogError($"Error: {ex.Message}");
                     return View();
                 }
             }
