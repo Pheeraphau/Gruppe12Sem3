@@ -1,10 +1,10 @@
 ﻿@model List<WebApplication1.Data.GeoChange>
 
 @{
-    ViewData["Title"] = "Mine Områderegistreringer"; // "Mine Områderegistreringer"
+    ViewData["Title"] = "Mine Områderegistreringer"; // Setter tittelen på nettleserfanen
 }
 
-<h2 class="text-center">Mine Områderegistreringer</h2>
+<h2 class="text-center">Mine Områderegistreringer</h2> <!-- Overskrift som vises på siden -->
 
 <table class="table table-striped mt-4">
     <thead>
@@ -17,66 +17,66 @@
     <tbody>
         @if (Model.Any())
         {
-            @foreach (var change in Model)
+            @foreach (var change in Model) // Løkke for å iterere gjennom alle områderegistreringer
             {
                 <tr>
-                    <td>@change.Id</td>
-                    <td>@change.Description</td>
-                    <td>@change.GeoJson</td>
+                    <td>@change.Id</td> 
+                    <td>@change.Description</td> 
+                    <td>@change.GeoJson</td> 
                 </tr>
             }
         }
         else
         {
             <tr>
-                <td colspan="3" class="text-center">Ingen registreringer funnet</td>
+                <td colspan="3" class="text-center">Ingen registreringer funnet</td> 
             </tr>
         }
     </tbody>
 </table>
 
-<!-- Map container -->
-<div id="map" style="height: 400px;"></div>
+<!-- Kartcontainer -->
+<div id="map" style="height: 400px;"></div> 
 
 @section Scripts {
-    <!-- Import Leaflet CSS and JS -->
+    <!-- Importerer Leaflet CSS og JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        // Initialize the map
+        // Initialiserer kartet
         var map = L.map('map');
 
-        // Add OpenStreetMap tile layer
+        // Legger til OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Iterate over user's registered changes and add them to the map
+        // Itererer gjennom brukerens registrerte endringer og legger dem til på kartet
         var changes = @Html.Raw(Json.Serialize(Model));
 
         if (changes.length > 0) {
-            var bounds = L.latLngBounds(); // Initialize bounds to fit all GeoJSON layers
+            var bounds = L.latLngBounds(); // Initialiserer bounds for å passe alle GeoJSON-lag
 
             changes.forEach(function (change) {
                 try {
-                    // Parse GeoJSON data and add to the map
+                    // Parser GeoJSON-data og legger til kartet
                     var geoLayer = L.geoJSON(JSON.parse(change.geoJson)).addTo(map);
 
-                    // Extend bounds to include this layer
+                    // Utvider bounds for å inkludere dette laget
                     bounds.extend(geoLayer.getBounds());
 
-                    // Bind a popup with the description
+                    // Legger til en popup med beskrivelsen
                     geoLayer.bindPopup(change.description);
                 } catch (error) {
-                    console.error("Failed to load GeoJSON data for ID:", change.id, "Feil:", error);
+                    console.error("Kunne ikke laste GeoJSON-data for ID:", change.id, "Feil:", error); // Logger feil dersom GeoJSON-data ikke kan lastes
                 }
             });
 
-            // Fit map to bounds of all layers
+            // Tilpasser kartet til bounds for alle lagene
             map.fitBounds(bounds);
         } else {
-            // Default map view if no data is present
+            // Standard kartvisning dersom ingen data er tilgjengelig
             map.setView([60.14, 10.25], 9);
         }
     </script>

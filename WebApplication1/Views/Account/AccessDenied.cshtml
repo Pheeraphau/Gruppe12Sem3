@@ -1,12 +1,12 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Ingen tilgang";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Felles layout for konsistent utseende
+    ViewData["Title"] = "Ingen tilgang"; // Tittel for nettleserfanen
 }
 
 <div class="container mt-5">
-    <h1 class="text-danger text-center">Ingen tilgang</h1>
-    <p class="text-center">Du har ikke tillatelse til å få tilgang til denne siden.</p>
+    <h1 class="text-danger text-center">Ingen tilgang</h1> <!-- Informerer brukeren om manglende tilgang -->
+    <p class="text-center">Du har ikke tillatelse til å få tilgang til denne siden.</p> <!-- Forklarer hvorfor tilgang er nektet -->
     <div class="text-center mt-4">
-        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Gå til hjem</a>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Gå til hjem</a> <!-- Knapp for å gå tilbake til startsiden -->
     </div>
 </div>

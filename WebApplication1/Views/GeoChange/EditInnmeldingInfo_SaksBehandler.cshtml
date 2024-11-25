@@ -1,15 +1,15 @@
 ﻿@model WebApplication1.Data.GeoChange
 
 @{
-    ViewData["Title"] = "Edit";
-    var source = ViewData["Source"] as string;
+    ViewData["Title"] = "Rediger"; // Setter tittelen på nettleserfanen til 'Rediger'
+    var source = ViewData["Source"] as string; // Henter kilden (f.eks. 'MineInnmeldinger' eller 'SaksBehandlerOversikt') for navigasjon
 }
 
 <div class="container mt-5">
-    <h2>Edit GeoChange</h2>
+    <h2>Rediger GeoChange</h2>
     <form asp-action="Edit" method="post">
         <input type="hidden" asp-for="Id" />
-        <input type="hidden" name="source" value="@source" /> <!-- Pass the source -->
+        <input type="hidden" name="source" value="@source" /> <!-- Beholder kilden for å navigere tilbake til riktig side etter lagring -->
 
         <div class="form-group">
             <label asp-for="GeoJson">GeoJson</label>
@@ -17,7 +17,7 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Description">Description</label>
+            <label asp-for="Description">Beskrivelse</label>
             <textarea asp-for="Description" class="form-control"></textarea>
         </div>
 
@@ -30,42 +30,40 @@
         }
         else
         {
-            <input type="hidden" asp-for="Status" /> <!-- Keeps the Status value intact but hides it -->
+            <input type="hidden" asp-for="Status" />
         }
 
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="@source" class="btn btn-secondary">Back</a> <!-- Ensure the back button uses the source -->
+        <button type="submit" class="btn btn-primary">Lagre</button> <!-- Lagre-knapp for å sende skjemaet -->
+        <a asp-action="@source" class="btn btn-secondary">Tilbake</a> <!-- Tilbake-knapp som bruker kilden for riktig navigasjon -->
     </form>
 
-    <!-- Map Section -->
     <div class="mt-4">
-        <h4>Map:</h4>
+        <h4>Kart:</h4> <!-- Overskrift for kartseksjonen -->
         <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 2); // Default center and zoom level
+        // Initialiserer kartet med standard senter og zoomnivå
+        var map = L.map('map').setView([0, 0], 2);
 
-        // Add OpenStreetMap tiles
+        // Legger til OpenStreetMap-fliser
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Parse the GeoJSON from the model
+        // Parser GeoJSON fra modellen
         var geoJsonData = @Html.Raw(Model.GeoJson);
 
-        // Add GeoJSON to the map
+        // Legger til GeoJSON-lag på kartet
         var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
 
-        // Fit the map to the bounds of the GeoJSON layer
+        // Tilpasser kartet til grensene for GeoJSON-laget
         map.fitBounds(geoJsonLayer.getBounds());
     });
 </script>
 
-<!-- Add Leaflet.js and CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
