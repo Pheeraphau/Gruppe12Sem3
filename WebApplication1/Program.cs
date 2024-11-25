@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using WebApplication1;
+using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(); // Add MVC services for views and controllers
 
 // Add database context (replace 'DefaultConnection' with your actual connection string name in appsettings.json)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -31,15 +33,22 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Add Razor Pages if using them
-builder.Services.AddControllersWithViews();
-
 // Add session services
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
     options.Cookie.HttpOnly = true; // Only accessible via HTTP
     options.Cookie.IsEssential = true; // Mark cookie as essential
+});
+
+// Add API settings from appsettings.json
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
+// Configure HttpClient for KommuneService with BaseAddress
+builder.Services.AddHttpClient<KommuneService>(client =>
+{
+    // Set the base URL for the API
+    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:KommuneInfoApiBaseUrl"]);
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -110,7 +119,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -119,8 +127,6 @@ app.UseRouting();
 // Add authentication and authorization middlewares
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseRouting();
-app.UseHttpsRedirection();
 
 // Use session middleware
 app.UseSession();

@@ -1,0 +1,19 @@
+﻿@model WebApplication1.API_Models.KommuneInfo
+
+@{
+    ViewData["Title"] = "Kommune Info";
+}
+
+<div class="container mt-5">
+    <h2>Kommune Detaljer</h2>
+    <div class="card p-4">
+        <p><strong>Kommunenavn:</strong> @Model.KommunenavnNorsk</p>
+        <p><strong>Kommunenummer:</strong> @Model.Kommunenummer</p>
+        <p><strong>Fylkesnavn:</strong> @Model.Fylkesnavn</p>
+        <p><strong>Fylkesnummer:</strong> @Model.Fylkesnummer</p>
+        <p><strong>Er det i Samisk Forvaltningsområde:</strong> @(Model.SamiskForvaltningsomrade ? "Yes" : "No")</p>
+    </div>
+
+    <a class="btn btn-secondary mt-3" href="@Url.Action("KommuneSearch", "Kommune")">Tilbake til søk</a>
+
+</div>
