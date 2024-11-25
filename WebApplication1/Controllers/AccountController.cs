@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 
@@ -14,12 +15,10 @@ namespace WebApplication1.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        // <summary>
-        // Returnerer view for å registrere en ny bruker.
-        //    - Denne metoden blir testet i enhetstesten Register_ShouldReturnView.
-        //    - Brukes for å vise registreringsskjemaet til nye brukere.
-        // </summary>
-        // <returns>Returnerer et view for registrering av en ny bruker.</returns>
+
+        /// <summary>
+        /// Returnerer view for å registrere en ny bruker.
+        /// </summary>
         [HttpGet]
         public IActionResult Register()
         {
@@ -35,59 +34,46 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult AccessDenied()
         {
-            return View(); // Create an AccessDenied.cshtml view for this
+            return View();
         }
 
-
-
+        /// <summary>
+        /// Håndterer registrering av en ny bruker.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Create the user
                 var user = new IdentityUser { UserName = model.Username, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    // Add the user to the "User" role
                     await _userManager.AddToRoleAsync(user, "User");
-
-                    TempData["RegistrationSuccess"] = "Registration successful! You will be redirected to the login page shortly.";
+                    TempData["RegistrationSuccess"] = "Registrering vellykket! Du vil bli sendt til innloggingssiden snart.";
                     return RedirectToAction("RegistrationSuccess");
                 }
 
-                // Add errors to the model state if the user creation fails
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
             }
 
-            // Return the same view with validation errors if model is invalid
             return View(model);
         }
-
-
 
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
-        // <summary>
-        // Håndterer innlogging av brukere.
-        //    - Denne metoden blir testet i enhetstesten Login_Post_InvalidCredentials_ShouldReturnViewWithError.
-        //    - Validerer brukerens innloggingsdetaljer, autentiserer brukeren og redirecter til riktig side basert på brukerens rolle.
-        // </summary>
-        // <param name="model">Modellen som inneholder brukerens e-post, passord og innloggingspreferanser.</param>
-        // <returns>
-        // Returnerer:
-        // - Redirect til relevante sider ved vellykket innlogging.
-        // - Samme view med en feilmelding ved mislykket innlogging.
-        // </returns>
+
+        /// <summary>
+        /// Håndterer innlogging av brukere.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -106,41 +92,43 @@ namespace WebApplication1.Controllers
 
                     if (result.Succeeded)
                     {
-                        // Check the user's role and redirect accordingly
                         var roles = await _userManager.GetRolesAsync(user);
                         if (roles.Contains("Saksbehandler"))
                         {
-                            return RedirectToAction("SaksBehandlerOversikt", "Home");
+                            return RedirectToAction("SaksBehandlerOversikt", "GeoChanged");
                         }
                         else if (roles.Contains("User"))
                         {
                             return RedirectToAction("MineInnmeldinger", "Home");
                         }
 
-                        // Default fallback redirection
                         return RedirectToAction("Index", "Home");
                     }
                 }
 
-                ModelState.AddModelError("", "Invalid login attempt.");
+                ModelState.AddModelError("", "Ugyldig innloggingsforsøk.");
             }
 
             return View(model);
         }
 
-        // <summary>
-        // Logger ut brukeren og redirecter til hjemmesiden.
-        //    - Denne metoden blir testet i enhetstesten Logout_ShouldRedirectToHomeIndex.
-        //    - Håndterer utlogging ved å rydde opp i autentiseringsstatusen og sende brukeren tilbake til hjemmesiden.
-        // </summary>
-        // <returns>Redirect til Home/Index.</returns>
+        /// <summary>
+        /// Logger ut brukeren og redirecter til hjemmesiden.
+        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync(); // Sign out the user
-            return RedirectToAction("Index", "Home"); // Redirect to the home page
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

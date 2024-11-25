@@ -10,14 +10,12 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context; // For database operations
-        private readonly UserManager<IdentityUser> _userManager; // For user operations
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        // Constructor with Dependency Injection
         public HomeController(
             ILogger<HomeController> logger,
             ApplicationDbContext context,
@@ -28,25 +26,7 @@ namespace WebApplication1.Controllers
             _userManager = userManager;
         }
 
-        private static List<PositionModel> positions = new List<PositionModel>();
-
-        /// <summary>
-        /// Returnerer view for å registrere områdeendring.
-        /// Denne metoden blir testet i enhetstesten Test_RegisterAreaChange_ShouldReturnView.
-        /// </summary>
         [HttpGet]
-        [Authorize]
-        public IActionResult RegisterAreaChange()
-        {
-            return View();
-        }
-        /// Returnerer view for Privacy-siden.
-        [HttpGet]
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -56,83 +36,18 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-
-
-        [Authorize]
-        public IActionResult AboutKartverket()
+        [HttpGet]
+        public IActionResult Privacy()
         {
             return View();
         }
 
-
-
-        // Display overview of area changes
+        [Authorize]
         [HttpGet]
-        [Authorize(Roles = "Bruker")] // Ensure only logged-in users can access
-        public IActionResult AreaChangeOverview()
+        public IActionResult AboutKartverket()
         {
-            // Get the logged-in user's ID
-            var userId = _userManager.GetUserId(User);
-
-            // Fetch only area changes that belong to this user
-            var userChanges = _context.GeoChanges
-                .Where(g => g.UserId == userId) // Filter by user ID
-                .ToList();
-
-            // Pass the filtered changes to the view
-            return View(userChanges);
+            return View();
         }
-
-        // Handle form submission to register area change
-        [HttpPost]
-        [Authorize(Roles = "User")] // Ensure only logged-in users can access
-        public IActionResult RegisterAreaChange(string geoJson, string description)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(geoJson) || string.IsNullOrEmpty(description))
-                {
-                    return BadRequest("Ugyldig data");
-                }
-
-                // Get the currently logged-in user's ID
-                var userId = _userManager.GetUserId(User);
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Unauthorized("Bruker er ikke logget inn");
-                }
-
-                // Create a new GeoChange object
-                var newGeoChange = new GeoChange
-                {
-                    GeoJson = geoJson,
-                    Description = description,
-                    UserId = userId, // Associate the change with the logged-in user
-                    Registreringsdato = DateTime.Now, // Record the registration date
-                    Status = "Innsendt"
-                };
-
-                // Save the new GeoChange to the database
-                _context.GeoChanges.Add(newGeoChange);
-                _context.SaveChanges();
-
-                // Fetch all area changes for the logged-in user
-                var userChanges = _context.GeoChanges
-                    .Where(g => g.UserId == userId) // Filter by user ID
-                    .ToList();
-
-                // Return the updated overview view with the user's changes
-                return View("AreaChangeOverview", userChanges);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
-                throw;
-            }
-        }
-
-
-
 
         [HttpGet]
         public IActionResult RegistrationForm()
@@ -147,268 +62,17 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    // Save the UserData object to the database
                     _context.UserData.Add(userData);
                     _context.SaveChanges();
-
                     return RedirectToAction("RegisterAreaChange");
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions
                     Console.WriteLine($"Error: {ex.Message}");
-                    return View(); // You could return a view with an error message
+                    return View();
                 }
             }
-            // If the model is invalid, return the same view with validation errors
             return View(userData);
         }
-
-        [HttpGet]
-        [Authorize(Roles = "User")]
-        public IActionResult MineInnmeldinger()
-        {
-            var userId = _userManager.GetUserId(User);
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("User not logged in"); // Ensure user is authenticated
-            }
-
-            var innmeldinger = _context.GeoChanges
-                .Where(g => g.UserId == userId) // Only fetch messages for the logged-in user
-                .Select(g => new Innmelding
-                {
-                    Id = g.Id,
-                    Registreringsdato = g.Registreringsdato ?? DateTime.Now,
-                    Beskrivelse = g.Description ?? "No description available",
-                    Status = g.Status
-                })
-                .ToList();
-
-            return View(innmeldinger); // Return the user's messages
-        }
-
-
-
-
-
-
-        [HttpGet]
-        [Authorize(Roles = "Saksbehandler")]
-        public IActionResult SaksBehandlerOversikt(string searchTerm)
-        {
-            ViewData["SearchTerm"] = searchTerm;
-
-            // Fetch and filter data
-            var data = _context.GeoChanges
-                .Where(g =>
-                    string.IsNullOrEmpty(searchTerm) ||
-                    g.Id.ToString().Contains(searchTerm) ||
-                    _context.Users.Where(u => u.Id == g.UserId)
-                                  .Select(u => u.UserName)
-                                  .FirstOrDefault()
-                                  .Contains(searchTerm) ||
-                    g.Description.Contains(searchTerm)
-                )
-                .Select(g => new BrukerInnmelding
-                {
-                    Id = g.Id,
-                    KundeNavn = _context.Users
-                        .Where(u => u.Id == g.UserId)
-                        .Select(u => u.UserName)
-                        .FirstOrDefault() ?? "N/A",
-                    Registreringsdato = g.Registreringsdato ?? DateTime.Now,
-                    Beskrivelse = g.Description ?? "No description available",
-                    Status = g.Status
-                })
-                .ToList();
-
-            return View(data);
-        }
-        [HttpPost]
-        [Authorize(Roles = "User,Saksbehandler")]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
-        {
-            try
-            {
-                // Forsøk å finne posten i databasen
-                var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-                if (geoChange == null)
-                {
-                    // Logg og returner 404 hvis posten ikke eksisterer
-                    _logger.LogWarning($"GeoChange med ID {id} ble ikke funnet for sletting.");
-                    return NotFound($"GeoChange med ID {id} ble ikke funnet.");
-                }
-
-                // Fjern posten og lagre endringer
-                _context.GeoChanges.Remove(geoChange);
-                _context.SaveChanges();
-
-                // Bekreft sletting ved å sikre at den ikke lenger finnes i databasen
-                if (_context.GeoChanges.Any(g => g.Id == id))
-                {
-                    // Logg en kritisk feil hvis posten ikke ble fjernet
-                    _logger.LogError($"GeoChange med ID {id} ble ikke slettet.");
-                    return StatusCode(500, "En feil oppstod under forsøket på å slette posten. Vennligst prøv igjen.");
-                }
-
-                // Logg vellykket sletting
-                _logger.LogInformation($"GeoChange med ID {id} ble slettet.");
-
-                // Omdiriger til en passende handling etter vellykket sletting
-                return RedirectToAction("MineInnmeldinger");
-            }
-            catch (Exception ex)
-            {
-                // Logg feilen med detaljer
-                _logger.LogError(ex, $"En feil oppstod under sletting av GeoChange med ID {id}.");
-                return StatusCode(500, "En intern serverfeil oppstod. Vennligst kontakt support.");
-            }
-        }
-
-        public IActionResult Edit(int id)
-        {
-            var geoChange = _context.GeoChanges.Find(id);
-            if (geoChange == null)
-            {
-                return NotFound();
-            }
-
-            var statusOptions = new List<SelectListItem>
-    {
-        new SelectListItem { Value = "Innsendt", Text = "Innsendt" },
-        new SelectListItem { Value = "Under behandling", Text = "Under behandling" },
-        new SelectListItem { Value = "Godkjent", Text = "Godkjent" }
-    };
-
-            ViewBag.StatusOptions = new SelectList(statusOptions, "Value", "Text", geoChange.Status);
-
-            return View(geoChange);
-        }
-
-
-        [HttpPost]
-        public IActionResult Edit(int id, GeoChange updatedGeoChange, string source = null)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewData["Source"] = source; // Pass the source back to the view in case of errors
-                return View("EditInnmeldingInfo_SaksBehandler", updatedGeoChange);
-            }
-
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-            if (geoChange == null)
-            {
-                return NotFound(); // Return 404 if record doesn't exist
-            }
-
-            // Update the record
-            geoChange.GeoJson = updatedGeoChange.GeoJson;
-            geoChange.Description = updatedGeoChange.Description;
-            geoChange.Status = updatedGeoChange.Status;
-
-            _context.SaveChanges(); // Commit changes to the database
-
-            // Redirect based on the source
-            if (source == "MineInnmeldinger")
-            {
-                return RedirectToAction("MineInnmeldinger"); // Redirect to "Mine Innmeldinger"
-            }
-            else
-            {
-                return RedirectToAction("SaksBehandlerOversikt"); // Redirect to "Saks Behandler Oversikt"
-            }
-        }
-
-
-
-        [HttpGet]
-        public IActionResult Details(int id, string source = null)
-        {
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-            if (geoChange == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["Source"] = source; // Pass the source to the view
-            return View("DetailsInnmeldingSaksbehandler", geoChange);
-        }
-
-
-
-        public IActionResult EditInnmeldingInfo_SaksBehandler(int id, string source)
-        {
-            // Retrieve the GeoChange model from the database using the id
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-
-            if (geoChange == null)
-            {
-                return NotFound();
-            }
-
-            // Pass the model and source to the view
-            ViewData["Source"] = source;
-            return View(geoChange); // Ensure this returns the correct view name
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOut()
-        {
-            // Clear the authentication cookies
-            await HttpContext.SignOutAsync();
-
-            // Redirect to the homepage
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        [Authorize]
-        public IActionResult AddGeoChange(string geoJson, string description)
-        {
-            if (string.IsNullOrEmpty(geoJson) || string.IsNullOrEmpty(description))
-            {
-                return BadRequest("Invalid data");
-            }
-
-            // Get the currently logged-in user's ID
-            var userId = _userManager.GetUserId(User);
-
-            // Create a new GeoChange object
-            var geoChange = new GeoChange
-            {
-                GeoJson = geoJson,
-                Description = description,
-                UserId = userId,
-                Registreringsdato = DateTime.Now // Set the current date
-            };
-
-            // Save the new GeoChange to the database
-            _context.GeoChanges.Add(geoChange);
-            _context.SaveChanges();
-
-            return RedirectToAction("MineInnmeldinger");
-        }
-
-
-
-        [HttpGet]
-        public IActionResult DetailsInnmeldingSaksbehandler(int id, string source = null)
-        {
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
-            if (geoChange == null)
-            {
-                return NotFound(); // Return 404 if record doesn't exist
-            }
-
-            ViewData["Source"] = source; // Pass the source page info to the view
-            return View(geoChange); // Render the details view
-        }
-
-
     }
-
 }
