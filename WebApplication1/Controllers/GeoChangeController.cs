@@ -140,13 +140,20 @@ namespace WebApplication1.Controllers
                 _context.SaveChanges();
 
                 _logger.LogInformation($"GeoChange with ID {id} was deleted.");
+
+                // Redirect based on the source
                 if (source == "MineInnmeldinger")
                 {
                     return RedirectToAction("MineInnmeldinger", "GeoChange");
                 }
+                else if (source == "SaksBehandlerOversikt" && User.IsInRole("Saksbehandler"))
+                {
+                    return RedirectToAction("SaksBehandlerOversikt", "GeoChange");
+                }
                 else
                 {
-                    return RedirectToAction("SaksBehandlerOversikt");
+                    // If no source is provided, redirect to a default action for the current user
+                    return RedirectToAction("MineInnmeldinger", "GeoChange");
                 }
             }
             catch (Exception ex)
@@ -155,6 +162,7 @@ namespace WebApplication1.Controllers
                 return StatusCode(500, "An internal server error occurred. Please contact support.");
             }
         }
+
 
 
 
