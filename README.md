@@ -4,13 +4,13 @@ Velkommen til **Kartverket-prosjektet**! Dette systemet gir effektiv håndtering
 
 ---
 
-## 📄 Dokumentasjon
+## Dokumentasjon
 
 For mer teknisk dokumentasjon, besøk [Wiki](https://github.com/Gruppe12/Kartverket/wiki).
 
 ---
 
-## ✨ Funksjoner
+## Funksjoner
 
 - **Rollehåndtering**:
   - **Saksbehandler**: Behandle og gjennomgå alle innsendte kartendringer.
