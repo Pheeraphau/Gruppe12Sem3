@@ -21,7 +21,7 @@ For mer teknisk dokumentasjon, besøk [Wiki](https://github.com/Gruppe12/Kartver
 
 ---
 
-## 🚀 Installasjon
+## Installasjon
 
 ### Forutsetninger
 
@@ -51,7 +51,7 @@ Sørg for at følgende er installert:
 
 ---
 
-## 🖥️ Teknologier i bruk
+## Teknologier i bruk
 
 - **MariaDB**: Relasjonsdatabase, hostet i Docker.
 - **ASP.NET Core**: Backend-rammeverk for API-er og logikk.
@@ -60,7 +60,7 @@ Sørg for at følgende er installert:
 
 ---
 
-## 🧑‍💻 Demobruker
+## Demobruker
 
 For å utforske applikasjonen, bruk følgende innloggingsinformasjon:
 
