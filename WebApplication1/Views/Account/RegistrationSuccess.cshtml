@@ -1,36 +1,36 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Registrering vellykket";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Bruker felles layout for å sikre enhetlig utseende på tvers av siden
+    ViewData["Title"] = "Registrering vellykket"; // Setter tittelen på nettleserfanen til 'Registrering vellykket'
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
-            <h4>Registrering vellykket</h4>
+            <h4>Registrering vellykket</h4> <!-- Overskrift som bekrefter at registreringen er vellykket -->
             <p class="mt-4">
                 Du vil bli sendt til innloggingssiden om
-                <span id="countdown">7</span> sekunder.
+                <span id="countdown">7</span> sekunder. <!-- Informasjon til brukeren om at de vil bli omdirigert etter 7 sekunder -->
             </p>
             <p>
                 Hvis du ikke blir omdirigert,
-                <a asp-action="Login" asp-controller="Account">Klikk her</a> for å gå til innloggingssiden.
+                <a asp-action="Login" asp-controller="Account">Klikk her</a> for å gå til innloggingssiden. <!-- Alternativ lenke til innloggingssiden dersom automatisk omdirigering feiler -->
             </p>
         </div>
     </div>
 </div>
 
 <script>
-    var seconds = 7; // Countdown starting from 7 seconds
-    var countdownElement = document.getElementById('countdown');
+    var seconds = 7; // Nedtelling starter på 7 sekunder
+    var countdownElement = document.getElementById('countdown'); // Henter elementet som viser nedtellingen
 
-    // Update the countdown every second
+    // Oppdaterer nedtellingen hvert sekund
     setInterval(function () {
-        seconds--;
-        countdownElement.textContent = seconds;
+        seconds--; // Reduserer antall sekunder med 1
+        countdownElement.textContent = seconds; // Oppdaterer visningen av nedtellingen
 
-        // Omdiriger når nedtellingen når null
+        // Omdirigerer når nedtellingen når null
         if (seconds <= 0) {
-            window.location.href = '@Url.Action("Login", "Account")';
+            window.location.href = '@Url.Action("Login", "Account")'; // Omdirigerer til innloggingssiden
         }
     }, 1000); // 1000 millisekunder = 1 sekund
 </script>
