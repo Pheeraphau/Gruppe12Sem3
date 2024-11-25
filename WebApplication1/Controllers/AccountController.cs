@@ -95,7 +95,7 @@ namespace WebApplication1.Controllers
                         var roles = await _userManager.GetRolesAsync(user);
                         if (roles.Contains("Saksbehandler"))
                         {
-                            return RedirectToAction("SaksBehandlerOversikt", "GeoChanged");
+                            return RedirectToAction("SaksBehandlerOversikt", "GeoChange");
                         }
                         else if (roles.Contains("User"))
                         {
@@ -125,7 +125,7 @@ namespace WebApplication1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOut()
+        public async Task<IActionResult> Signout()
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");

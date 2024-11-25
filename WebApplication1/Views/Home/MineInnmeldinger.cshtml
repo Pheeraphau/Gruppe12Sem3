@@ -37,8 +37,8 @@
                             <td>@item.Beskrivelse</td>
                             <td>@item.Status</td>
                             <td>
-                                <a href="@Url.Action("EditInnmeldingInfo_Saksbehandler", "Home", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-warning btn-sm">Rediger</a>
-                                <a href="@Url.Action("DetailsInnmeldingSaksbehandler", "Home", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-info btn-sm">Detaljer</a>
+                                <a href="@Url.Action("EditInnmeldingInfo_Saksbehandler", "GeoChange", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-warning btn-sm">Rediger</a>
+                                <a href="@Url.Action("DetailsInnmeldingSaksbehandler", "GeoChange", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-info btn-sm">Detaljer</a>
                                 <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id" data-source="MineInnmeldinger">Slett</a>
                             </td>
                         </tr>

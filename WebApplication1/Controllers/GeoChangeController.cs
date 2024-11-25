@@ -8,16 +8,16 @@ using WebApplication1.Models;
 namespace WebApplication1.Controllers
 {
     [Authorize]
-    public class GeoChangedController : Controller
+    public class GeoChangeController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly ILogger<GeoChangedController> _logger;
+        private readonly ILogger<GeoChangeController> _logger;
 
-        public GeoChangedController(
+        public GeoChangeController(
             ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
-            ILogger<GeoChangedController> logger)
+            ILogger<GeoChangeController> logger)
         {
             _context = context;
             _userManager = userManager;
@@ -117,37 +117,38 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "User,Saksbehandler")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, string source = null)
         {
             try
             {
                 var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
                 if (geoChange == null)
                 {
-                    _logger.LogWarning($"GeoChange med ID {id} ble ikke funnet for sletting.");
-                    return NotFound($"GeoChange med ID {id} ble ikke funnet.");
+                    _logger.LogWarning($"GeoChange with ID {id} was not found for deletion.");
+                    return NotFound($"GeoChange with ID {id} was not found.");
                 }
 
                 _context.GeoChanges.Remove(geoChange);
                 _context.SaveChanges();
 
-                if (_context.GeoChanges.Any(g => g.Id == id))
+                _logger.LogInformation($"GeoChange with ID {id} was deleted.");
+                if (source == "MineInnmeldinger")
                 {
-                    _logger.LogError($"GeoChange med ID {id} ble ikke slettet.");
-                    return StatusCode(500, "En feil oppstod under forsøket på å slette posten. Vennligst prøv igjen.");
+                    return RedirectToAction("MineInnmeldinger", "Home");
                 }
-
-                _logger.LogInformation($"GeoChange med ID {id} ble slettet.");
-                return RedirectToAction("MineInnmeldinger");
+                else
+                {
+                    return RedirectToAction("SaksBehandlerOversikt");
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"En feil oppstod under sletting av GeoChange med ID {id}.");
-                return StatusCode(500, "En intern serverfeil oppstod. Vennligst kontakt support.");
+                _logger.LogError(ex, $"An error occurred while deleting GeoChange with ID {id}.");
+                return StatusCode(500, "An internal server error occurred. Please contact support.");
             }
         }
+
 
         [HttpGet]
         public IActionResult Edit(int id)
@@ -200,8 +201,26 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // GET: Edit GeoChange information for Saksbehandler
         [HttpGet]
-        public IActionResult Details(int id, string source = null)
+        [Authorize(Roles = "Saksbehandler")]
+        public IActionResult EditInnmeldingInfo_SaksBehandler(int id, string source)
+        {
+            // Retrieve the GeoChange model from the database using the id
+            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
+
+            if (geoChange == null)
+            {
+                return NotFound();
+            }
+
+            // Pass the model and source to the view
+            ViewData["Source"] = source;
+            return View(geoChange); // Ensure this returns the correct view name
+        }
+
+            [HttpGet]
+        public IActionResult DetailsInnmeldingSaksbehandler(int id, string source = null)
         {
             var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
             if (geoChange == null)
