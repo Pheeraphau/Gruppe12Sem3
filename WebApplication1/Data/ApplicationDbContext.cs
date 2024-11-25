@@ -11,16 +11,16 @@ namespace WebApplication1.Data
         {
         }
 
-        // DbSet for GeoChange
+        // Database-sett for GeoChange-objekter
         public DbSet<GeoChange> GeoChanges { get; set; }
 
-        // DbSet for UserData
+        // Database-sett for UserData-objekter
         public DbSet<UserData> UserData { get; set; }
 
+        // Database-sett for posisjoner (PositionModel-objekter)
         public DbSet<PositionModel> Positions { get; set; }
 
-
-        // DbSet for AreaChange
+        // Database-sett for AreaChange-objekter
         public DbSet<AreaChange> AreaChange { get; set; }
     }
 }

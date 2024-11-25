@@ -16,21 +16,21 @@ public class KommuneService
     {
         try
         {
-            // Update the URL to use kommunenummer instead of kommunenavn
+            // Hent informasjon om en kommune basert på kommunenummer
             var response = await _httpClient.GetAsync($"/kommuneinfo/v1/kommuner/{kommunenummer}");
-            response.EnsureSuccessStatusCode(); // Throws an exception if the response status is not success (200-299)
+            response.EnsureSuccessStatusCode(); // Kaster en unntak hvis responsen ikke er en suksess (200-299)
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<KommuneInfo>(jsonResponse);
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            // Return null for a 404 error (kommune not found)
+            // Returner null hvis kommunen ikke finnes (404-feil)
             return null;
         }
         catch (Exception)
         {
-            // Log or handle other exceptions
+            // Loggfør eller håndter andre unntak
             throw;
         }
     }

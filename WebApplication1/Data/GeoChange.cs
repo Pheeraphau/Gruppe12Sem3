@@ -5,22 +5,22 @@ namespace WebApplication1.Data
 {
     public class GeoChange
     {
-        [Key] // EF Core primary key
+        [Key] // Primærnøkkel for EF Core
         public int Id { get; set; }
 
-        [Required] // Required field for GeoJSON data
+        [Required] // Påkrevd felt for GeoJSON-data
         public string GeoJson { get; set; }
 
-        [Required] // Required field for description
+        [Required] // Påkrevd felt for beskrivelse
         public string Description { get; set; }
 
-        [BindNever] // Prevent binding from HTTP requests
-        public string? UserId { get; set; } // Foreign Key for the associated user
+        [BindNever] // Hindrer binding fra HTTP-forespørsler
+        public string? UserId { get; set; } // Fremmednøkkel for tilknyttet bruker
 
-        // Optional registration date for tracking when the change was created
+        // Valgfri registreringsdato for å spore når endringen ble opprettet
         public DateTime? Registreringsdato { get; set; } = DateTime.Now;
 
-        // Optional status field, defaulting to "Innsendt"
+        // Valgfritt statusfelt, standardverdi er "Innsendt"
         public string Status { get; set; } = "Innsendt";
     }
 }

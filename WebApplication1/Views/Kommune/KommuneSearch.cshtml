@@ -5,6 +5,7 @@
 <h2>@ViewData["Title"]</h2>
 
 <form method="post" action="@Url.Action("Search", "Kommune")">
+    <!-- Form for søking av kommune ved bruk av kommunenummer -->
     <div class="form-group">
         <label for="kommunenummer">Kommunenummer</label>
         <input type="text" id="kommunenummer" name="kommunenummer" class="form-control" placeholder="Skriv inn kommunenummer" />
@@ -14,6 +15,7 @@
 
 @if (ViewData["ErrorMessage"] != null)
 {
+    <!-- Vise feilmelding dersom søket feiler -->
     <div class="alert alert-danger mt-3">
         @ViewData["ErrorMessage"]
     </div>
