@@ -55,8 +55,7 @@
         }).addTo(map);
 
         // Parse the GeoJSON from the model
-        var geoJsonData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.GeoJson));
-
+        var geoJsonData = @Html.Raw(Model.GeoJson);
         // Add GeoJSON to the map
         var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
 
