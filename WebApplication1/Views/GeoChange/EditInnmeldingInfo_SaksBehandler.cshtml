@@ -1,69 +1,114 @@
 ﻿@model WebApplication1.Data.GeoChange
 
 @{
-    ViewData["Title"] = "Rediger"; // Setter tittelen på nettleserfanen til 'Rediger'
-    var source = ViewData["Source"] as string; // Henter kilden (f.eks. 'MineInnmeldinger' eller 'SaksBehandlerOversikt') for navigasjon
+    ViewData["Title"] = "Edit GeoChange";
+    string returnUrl = "";
+
+    if (User.IsInRole("Saksbehandler"))
+    {
+        returnUrl = Url.Action("SaksBehandlerOversikt", "GeoChange");
+    }
+    else if (User.IsInRole("User"))
+    {
+        returnUrl = Url.Action("MineInnmeldinger", "GeoChange");
+    }
+    else
+    {
+        returnUrl = Url.Action("Index", "Home");
+    }
 }
 
 <div class="container mt-5">
-    <h2>Rediger GeoChange</h2>
-    <form asp-action="Edit" method="post">
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" name="source" value="@source" /> <!-- Beholder kilden for å navigere tilbake til riktig side etter lagring -->
-
-        <div class="form-group">
-            <label asp-for="GeoJson">GeoJson</label>
-            <textarea asp-for="GeoJson" class="form-control"></textarea>
+    <div class="card p-4" style="background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px;">
+        <!-- Save and Back Buttons -->
+        <div class="d-flex justify-content-end mb-3">
+            <button type="submit" form="editForm" class="btn btn-primary">Save</button>
+            <a href="@returnUrl" class="btn btn-secondary ml-2">Back</a>
         </div>
 
-        <div class="form-group">
-            <label asp-for="Description">Beskrivelse</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-        </div>
+        <h2 class="text-center mb-4">Edit GeoChange</h2>
+        <form id="editForm" asp-action="Edit" method="post" asp-route-returnUrl="@returnUrl">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="source" value="@ViewData["Source"]" /> <!-- Beholder kilden for å navigere tilbake til riktig side etter lagring -->
+            <input type="hidden" name="returnUrl" value="@returnUrl" /> <!-- Hidden field to ensure proper redirection after saving -->
 
-        @if (source != "MineInnmeldinger")
-        {
-            <div class="form-group">
-                <label asp-for="Status">Status</label>
-                <input asp-for="Status" class="form-control" />
+            <div class="form-group mt-3">
+                <label asp-for="GeoJson">GeoJson</label>
+                <textarea asp-for="GeoJson" class="form-control"></textarea>
             </div>
-        }
-        else
-        {
-            <input type="hidden" asp-for="Status" />
-        }
 
-        <button type="submit" class="btn btn-primary">Lagre</button> <!-- Lagre-knapp for å sende skjemaet -->
-        <a asp-action="@source" class="btn btn-secondary">Tilbake</a> <!-- Tilbake-knapp som bruker kilden for riktig navigasjon -->
-    </form>
+            @if (User.IsInRole("User") || User.IsInRole("Saksbehandler"))
+            {
+                <div class="form-group mt-3">
+                    <label asp-for="Description">Description</label>
+                    @if (User.IsInRole("Saksbehandler"))
+                    {
+                        <textarea asp-for="Description" class="form-control" readonly style="background-color: #e9ecef; cursor: not-allowed;"></textarea>
+                    }
+                    else
+                    {
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                    }
+                </div>
+            }
 
-    <div class="mt-4">
-        <h4>Kart:</h4> <!-- Overskrift for kartseksjonen -->
-        <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
+            @if (User.IsInRole("Saksbehandler"))
+            {
+                <div class="form-group mt-3">
+                    <label asp-for="Status">Status</label>
+                    <input asp-for="Status" class="form-control" />
+                </div>
+            }
+
+            <!-- Map Section -->
+            <div class="mt-4">
+                <h4>Map:</h4>
+                <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialiserer kartet med standard senter og zoomnivå
-        var map = L.map('map').setView([0, 0], 2);
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 2); // Default center and zoom level
 
-        // Legger til OpenStreetMap-fliser
+        // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Parser GeoJSON fra modellen
+        // Parse the GeoJSON from the model
         var geoJsonData = @Html.Raw(Model.GeoJson);
 
-        // Legger til GeoJSON-lag på kartet
+        // Add GeoJSON to the map
         var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
 
-        // Tilpasser kartet til grensene for GeoJSON-laget
+        // Fit the map to the bounds of the GeoJSON layer
         map.fitBounds(geoJsonLayer.getBounds());
     });
 </script>
 
+<!-- Add Leaflet.js and CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+    .card {
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+    }
+
+    .btn {
+        margin-top: 10px;
+    }
+
+    .footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+</style>

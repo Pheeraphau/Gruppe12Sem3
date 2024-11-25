@@ -189,7 +189,6 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpPost]
         public async Task<IActionResult> Edit(int id, GeoChange updatedGeoChange)
         {
             if (!ModelState.IsValid)
@@ -228,8 +227,22 @@ namespace WebApplication1.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("MineInnmeldinger", "GeoChange");
+
+            // Determine the appropriate return URL
+            if (isSaksbehandler)
+            {
+                return RedirectToAction("SaksBehandlerOversikt", "GeoChange");
+            }
+            else if (isUser)
+            {
+                return RedirectToAction("MineInnmeldinger", "GeoChange");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
+
 
         // GET: Edit GeoChange information for Saksbehandler
         [HttpGet]
