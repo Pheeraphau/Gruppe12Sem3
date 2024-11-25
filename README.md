@@ -6,7 +6,7 @@ Velkommen til **Kartverket-prosjektet**! Dette systemet gir effektiv håndtering
 
 ## Dokumentasjon
 
-For mer teknisk dokumentasjon, besøk [Wiki](https://github.com/Gruppe12/Kartverket/wiki).
+For mer teknisk informasjon om prosjektet, inkludert API-integrasjoner, databasearkitektur og teknologier som er brukt, besøk vår [Wiki](https://github.com/Pheeraphau/Gruppe12Sem3/wiki).
 
 ---
 
