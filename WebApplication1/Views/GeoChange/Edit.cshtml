@@ -7,34 +7,37 @@
 
 <div class="container mt-5">
     <div class="card p-4" style="background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px;">
-        <!-- Save and Back Buttons -->
+        <!-- Lagre og Tilbake Knappene -->
         <div class="d-flex justify-content-end mb-3">
-            <button type="submit" form="editForm" class="btn btn-primary">Save</button>
-            <a href="@returnUrl" class="btn btn-secondary ml-2">Back</a>
+            <button type="submit" form="editForm" class="btn btn-primary">Lagre</button>
+            <a href="@returnUrl" class="btn btn-secondary ml-2">Tilbake</a>
         </div>
 
-        <h2 class="text-center">Edit GeoChange</h2>
+        <h2 class="text-center">Rediger GeoChange</h2>
         <form id="editForm" asp-action="Edit" method="post">
             <input type="hidden" asp-for="Id" />
 
+            <!-- GeoJson Input -->
             <div class="form-group mt-3">
                 <label asp-for="GeoJson">GeoJson</label>
                 <textarea asp-for="GeoJson" class="form-control"></textarea>
             </div>
 
+            <!-- Beskrivelse Input -->
             <div class="form-group mt-3">
-                <label asp-for="Description">Description</label>
+                <label asp-for="Description">Beskrivelse</label>
                 <textarea asp-for="Description" class="form-control"></textarea>
             </div>
 
+            <!-- Statusfelt, kun lesbar -->
             <div class="form-group mt-3">
                 <label asp-for="Status">Status</label>
                 <input asp-for="Status" class="form-control" readonly style="background-color: #e9ecef; cursor: not-allowed;" />
             </div>
 
-            <!-- Map Section -->
+            <!-- Kartseksjon -->
             <div class="mt-4">
-                <h4>Map:</h4>
+                <h4>Kart:</h4>
                 <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
             </div>
         </form>
@@ -43,27 +46,27 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 2); // Default center and zoom level
+        // Initialiser kartet
+        var map = L.map('map').setView([0, 0], 2); // Standard senter og zoomnivå
 
-        // Add OpenStreetMap tiles
+        // Legg til OpenStreetMap-fliser
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Parse the GeoJSON from the model
+        // Hent GeoJSON fra modellen
         var geoJsonData = @Html.Raw(Model.GeoJson);
 
-        // Add GeoJSON to the map
+        // Legg GeoJSON til kartet
         var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
 
-        // Fit the map to the bounds of the GeoJSON layer
+        // Tilpass kartet til grensene av GeoJSON-laget
         map.fitBounds(geoJsonLayer.getBounds());
     });
 </script>
 
-<!-- Add Leaflet.js and CSS -->
+<!-- Legg til Leaflet.js og CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 

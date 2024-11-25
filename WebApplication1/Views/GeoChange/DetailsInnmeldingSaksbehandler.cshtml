@@ -6,7 +6,7 @@
 
 <div class="container mt-5">
     <div class="card p-4" style="background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px;">
-        <!-- Back Button -->
+        <!-- Tilbakeknapp for å navigere til riktig side avhengig av kilde -->
         <div class="d-flex justify-content-end mb-3">
             @if (ViewData["Source"]?.ToString() == "MineInnmeldinger")
             {
@@ -20,17 +20,19 @@
 
         <h2 class="text-center">Details for ID: @Model.Id</h2>
 
+        <!-- Viser beskrivelse fra GeoChange-modellen -->
         <div class="form-group mt-3">
             <label><strong>Description:</strong></label>
             <p>@Model.Description</p>
         </div>
 
+        <!-- Viser status fra GeoChange-modellen -->
         <div class="form-group mt-3">
             <label><strong>Status:</strong></label>
             <p>@Model.Status</p>
         </div>
 
-        <!-- Map Section -->
+        <!-- Seksjon for kartvisning av geografiske data -->
         <div class="mt-4">
             <h4>Map:</h4>
             <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
@@ -40,27 +42,27 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 2); // Default center and zoom level
+        // Initialiserer kartet med standard senter og zoomnivå
+        var map = L.map('map').setView([0, 0], 2);
 
-        // Add OpenStreetMap tiles
+        // Legger til OpenStreetMap-fliser til kartet
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Parse the GeoJSON from the model
+        // Parser GeoJSON-data fra modellen
         var geoJsonData = @Html.Raw(Model.GeoJson);
 
-        // Add GeoJSON to the map
+        // Legger til GeoJSON-lag på kartet
         var geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
 
-        // Fit the map to the bounds of the GeoJSON layer
+        // Tilpasser kartet til å vise hele GeoJSON-laget
         map.fitBounds(geoJsonLayer.getBounds());
     });
 </script>
 
-<!-- Add Leaflet.js and CSS -->
+<!-- Legger til Leaflet.js og CSS for kartvisning -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
