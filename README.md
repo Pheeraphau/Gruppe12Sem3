@@ -64,6 +64,6 @@ Sørg for at følgende er installert:
 
 For å utforske applikasjonen, bruk følgende innloggingsinformasjon:
 
-- **Brukernavn**: `Admin`
-- **Passord**: `Admin123!`
+- **Brukernavn**: `kristian@testmail.com`
+- **Passord**: `Admin123`
 
