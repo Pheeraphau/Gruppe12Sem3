@@ -1,23 +1,23 @@
 ﻿@model WebApplication1.Models.AreaChange
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Registrer områdeendring";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Bruker felles layout for å sikre enhetlig utseende på tvers av siden
+    ViewData["Title"] = "Registrer områdeendring"; // Setter tittelen på nettleserfanen til 'Registrer områdeendring'
 }
 
 <div id="map-container">
     <div id="map"></div>
 </div>
 
-<!-- Popup bubble for description -->
+<!-- Popup-boble for å registrere beskrivelse av endringen -->
 <div id="reportBubble" class="report-bubble">
     <form asp-action="RegisterAreaChange" method="post">
-        <input type="hidden" id="geoJsonInput" name="geoJson" />
+        <input type="hidden" id="geoJsonInput" name="geoJson" /> <!-- Skjult felt for GeoJSON-data som brukeren tegner på kartet -->
         <div class="form-group">
             <label for="description">Beskrivelse av endring:</label>
             <textarea id="description" name="Description" class="form-control" placeholder="Beskriv feilen her..." required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary mt-2" style="width: 100%;">Send inn</button>
+        <button type="submit" class="btn btn-primary mt-2" style="width: 100%;">Send inn</button> <!-- Knapp for å sende inn registreringen -->
     </form>
 </div>
 
@@ -28,20 +28,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 
     <script>
-        // Initialize the map with fixed view
+        // Initialiserer kartet med fast visning
         var map = L.map('map', {
-            center: [60.14, 10.25],
-            zoom: 9,
-            scrollWheelZoom: false
+            center: [60.14, 10.25], // Sentrerer kartet til en fast posisjon i Norge
+            zoom: 9, // Setter zoomnivået
+            scrollWheelZoom: false // Deaktiverer zoom med musens scroll-hjul
         });
 
+        // Legger til OpenStreetMap-fliser for kartvisning
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Kartdata &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
+        // Oppretter en gruppe for elementene som tegnes på kartet
         var drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
 
+        // Konfigurerer kontrollene for tegning og redigering
         var drawControl = new L.Control.Draw({
             draw: {
                 polygon: true,
@@ -56,18 +59,18 @@
         });
         map.addControl(drawControl);
 
-        // Handle created elements
+        // Håndterer opprettede elementer på kartet
         map.on(L.Draw.Event.CREATED, function (e) {
             var layer = e.layer;
             drawnItems.addLayer(layer);
             var geoJsonData = layer.toGeoJSON();
-            document.getElementById('geoJsonInput').value = JSON.stringify(geoJsonData);
+            document.getElementById('geoJsonInput').value = JSON.stringify(geoJsonData); // Setter GeoJSON-data i skjemaet
 
-            // Show report bubble
+            // Viser popup-boblen for registrering av beskrivelse
             document.getElementById('reportBubble').style.display = 'block';
         });
 
-        // Hide report bubble on submit
+        // Skjuler popup-boblen når skjemaet sendes inn
         document.querySelector("#reportBubble form").addEventListener("submit", function () {
             document.getElementById('reportBubble').style.display = 'none';
         });
@@ -75,7 +78,7 @@
 }
 
 <style>
-    /* Styling to avoid horizontal scrolling and ensure full height */
+    /* Styling for å unngå horisontal scrolling og sikre full høyde */
     body, html {
         overflow-x: hidden;
         height: 100%;
@@ -83,11 +86,11 @@
         padding: 0;
     }
 
-    /* Full-height map container behind the navbar and footer */
+    /* Full-høyde kartcontainer bak navbaren og footeren */
     #map-container {
         position: fixed;
-        top: 60px; /* Adjust to match navbar height */
-        bottom: 40px; /* Adjust to leave room for footer */
+        top: 60px; /* Juster for å matche høyden på navbaren */
+        bottom: 40px; /* Juster for å la det være plass til footeren */
         left: 0;
         right: 0;
         overflow: hidden;
@@ -98,7 +101,7 @@
         width: 100%;
     }
 
-    /* Centered report bubble style */
+    /* Stil for popup-boble som sentreres på skjermen */
     .report-bubble {
         position: fixed;
         left: 50%;
@@ -111,17 +114,16 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         display: none;
         border-radius: 8px;
-        z-index: 1001; /* Ensure popup is above map controls */
+        z-index: 1001; /* Sørger for at popup-en er over kartkontrollene */
     }
 
-    /* Ensure navbar and footer overlap the map */
+    /* Sørger for at navbar og footer overlapper kartet */
     .navbar, .footer {
         z-index: 1000;
     }
 
-    /* Adjust map controls to have space from the navbar */
+    /* Justerer kartkontroller slik at det er plass fra navbaren */
     .leaflet-control-container {
         margin-top: 70px;
     }
 </style>
-

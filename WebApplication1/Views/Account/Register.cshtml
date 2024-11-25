@@ -1,68 +1,71 @@
 ﻿@model WebApplication1.Models.RegisterViewModel
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Registrer";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Bruker felles layout for å sikre enhetlig utseende på tvers av siden
+    ViewData["Title"] = "Registrer"; // Setter tittelen på nettleserfanen til 'Registrer'
 }
 
-<!-- Main container -->
+<!-- Hovedcontainer for registreringsskjema -->
 <div class="d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 300px); margin-top: -20px;">
     <div class="card shadow-lg p-5" style="width: 22rem; background-color: rgba(255, 255, 255, 0.9); border-radius: 15px;">
+        
         <h2 class="text-center mb-4" style="font-size: 1.8rem; font-weight: bold; color: #333;">Registrer</h2>
 
+        <!-- Registreringsskjema -->
         <form asp-action="Register" method="post">
             <div class="form-group mt-3">
-                <label asp-for="Username" style="color: #555;">Brukernavn</label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <label asp-for="Username" style="color: #555;">Brukernavn</label> 
+                <input asp-for="Username" class="form-control" /> 
+                <span asp-validation-for="Username" class="text-danger"></span> 
             </div>
 
             <div class="form-group mt-3">
-                <label asp-for="Email" style="color: #555;">E-postadresse</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="Email" style="color: #555;">E-postadresse</label> 
+                <input asp-for="Email" class="form-control" /> 
+                <span asp-validation-for="Email" class="text-danger"></span> 
             </div>
 
             <div class="form-group mt-3">
-                <label asp-for="Password" style="color: #555;">Passord</label>
-                <input asp-for="Password" class="form-control" type="password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <label asp-for="Password" style="color: #555;">Passord</label> 
+                <input asp-for="Password" class="form-control" type="password" /> 
+                <span asp-validation-for="Password" class="text-danger"></span> 
             </div>
 
             <div class="form-group mt-3">
-                <label asp-for="ConfirmPassword" style="color: #555;">Bekreft Passord</label>
-                <input asp-for="ConfirmPassword" class="form-control" type="password" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <label asp-for="ConfirmPassword" style="color: #555;">Bekreft Passord</label> 
+                <input asp-for="ConfirmPassword" class="form-control" type="password" /> 
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span> 
             </div>
 
+            
             <button type="submit" class="btn btn-blue mt-4 w-100" style="font-weight: bold;">Registrer deg</button>
         </form>
     </div>
 </div>
 
-<!-- Custom Styles -->
+<!-- Tilpassede stiler -->
 <style>
     body {
-        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75');
-        background-size: cover;
-        background-position: center;
+        background-image: url('https://www.kartverket.no/contentassets/14339e89aa5846b18ee25cd22d5e712d/forsidebilde-desktop-host2020b.jpg?width=1464&height=458&mode=crop&scale=both&quality=75'); // Bakgrunnsbilde for registreringssiden
+        background-size: cover; // Bakgrunnsbildet dekker hele skjermen
+        background-position: center; // Sentral posisjonering av bakgrunnsbildet
         margin: 0;
-        height: 100vh;
-        overflow: hidden; /* Disable scrolling */
+        height: 100vh; // Full høyde av viewport
+        overflow: hidden; // Deaktiverer scrolling
     }
 
     .card {
-        border: 1px solid #ddd;
+        border: 1px solid #ddd; 
     }
 
     .btn-blue {
-        background-color: #005bac; /* Blue from the logo */
+        background-color: #005bac; // Blå farge fra logoen
         border-color: #005bac;
         color: white;
     }
 
-        .btn-blue:hover {
-            background-color: #004b94; /* Darker blue for hover */
-            border-color: #004b94;
-        }
+    .btn-blue:hover {
+        background-color: #004b94; // Mørkere blå for hover-effekt
+        border-color: #004b94;
+    }
 </style>
