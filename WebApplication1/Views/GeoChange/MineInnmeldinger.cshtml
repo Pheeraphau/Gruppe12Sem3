@@ -39,7 +39,13 @@
                             <td>
                                 <a href="@Url.Action("Edit", "GeoChange", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-warning btn-sm">Rediger</a>
                                 <a href="@Url.Action("DetailsInnmeldingSaksbehandler", "GeoChange", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-info btn-sm">Detaljer</a>
-                                <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id" data-source="MineInnmeldinger">Slett</a>
+
+                                <!-- Delete Form -->
+                                <form asp-action="Delete" asp-controller="GeoChange" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Er du sikker på at du vil slette denne innmeldingen?');">Slett</button>
+                                </form>
                             </td>
                         </tr>
                     }
@@ -54,6 +60,7 @@
         </table>
     </div>
 </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
