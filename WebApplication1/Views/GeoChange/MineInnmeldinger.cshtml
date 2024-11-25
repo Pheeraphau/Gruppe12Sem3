@@ -37,7 +37,7 @@
                             <td>@item.Beskrivelse</td>
                             <td>@item.Status</td>
                             <td>
-                                <a href="@Url.Action("EditInnmeldingInfo_Saksbehandler", "GeoChange", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-warning btn-sm">Rediger</a>
+                                <a href="@Url.Action("Edit", "GeoChange", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-warning btn-sm">Rediger</a>
                                 <a href="@Url.Action("DetailsInnmeldingSaksbehandler", "GeoChange", new { id = item.Id, source = "MineInnmeldinger" })" class="btn btn-info btn-sm">Detaljer</a>
                                 <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="@item.Id" data-source="MineInnmeldinger">Slett</a>
                             </td>
@@ -71,7 +71,7 @@
 
                 if (isConfirmed) {
                     // Redirect to delete action
-                    window.location.href = '@Url.Action("Delete", "Home", new { id = "__id__", source = "__source__" })'
+                    window.location.href = '@Url.Action("Delete", "GeoChange", new { id = "__id__", source = "__source__" })'
                         .replace('__id__', itemId)
                         .replace('__source__', source);
                 }

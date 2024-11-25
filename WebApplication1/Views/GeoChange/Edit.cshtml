@@ -1,40 +1,43 @@
 ﻿@model WebApplication1.Data.GeoChange
 
 @{
-    ViewData["Title"] = "Details - Saksbehandler";
+    ViewData["Title"] = "Edit GeoChange";
+    var returnUrl = User.IsInRole("User") ? Url.Action("MineInnmeldinger", "GeoChange") : Url.Action("SaksBehandlerOversikt", "GeoChange");
 }
 
 <div class="container mt-5">
     <div class="card p-4" style="background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px;">
-        <!-- Back Button -->
+        <!-- Save and Back Buttons -->
         <div class="d-flex justify-content-end mb-3">
-            @if (ViewData["Source"]?.ToString() == "MineInnmeldinger")
-            {
-                <a href="@Url.Action("MineInnmeldinger", "GeoChange")" class="btn btn-secondary">Back</a>
-            }
-            else
-            {
-                <a href="@Url.Action("SaksBehandlerOversikt", "GeoChange")" class="btn btn-secondary">Back</a>
-            }
+            <button type="submit" form="editForm" class="btn btn-primary">Save</button>
+            <a href="@returnUrl" class="btn btn-secondary ml-2">Back</a>
         </div>
 
-        <h2 class="text-center">Details for ID: @Model.Id</h2>
+        <h2 class="text-center">Edit GeoChange</h2>
+        <form id="editForm" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
 
-        <div class="form-group mt-3">
-            <label><strong>Description:</strong></label>
-            <p>@Model.Description</p>
-        </div>
+            <div class="form-group mt-3">
+                <label asp-for="GeoJson">GeoJson</label>
+                <textarea asp-for="GeoJson" class="form-control"></textarea>
+            </div>
 
-        <div class="form-group mt-3">
-            <label><strong>Status:</strong></label>
-            <p>@Model.Status</p>
-        </div>
+            <div class="form-group mt-3">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
 
-        <!-- Map Section -->
-        <div class="mt-4">
-            <h4>Map:</h4>
-            <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
-        </div>
+            <div class="form-group mt-3">
+                <label asp-for="Status">Status</label>
+                <input asp-for="Status" class="form-control" readonly style="background-color: #e9ecef; cursor: not-allowed;" />
+            </div>
+
+            <!-- Map Section -->
+            <div class="mt-4">
+                <h4>Map:</h4>
+                <div id="map" style="height: 500px; border: 1px solid #ccc;"></div>
+            </div>
+        </form>
     </div>
 </div>
 

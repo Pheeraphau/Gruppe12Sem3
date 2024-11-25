@@ -99,7 +99,7 @@ namespace WebApplication1.Controllers
                         }
                         else if (roles.Contains("User"))
                         {
-                            return RedirectToAction("MineInnmeldinger", "Home");
+                            return RedirectToAction("MineInnmeldinger", "GeoChange");
                         }
 
                         return RedirectToAction("Index", "Home");
@@ -119,16 +119,9 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            await _signInManager.SignOutAsync(); // Sign out the user
+            return RedirectToAction("Index", "Home"); // Redirect to the home page
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Signout()
-        {
-            await HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
-        }
     }
 }

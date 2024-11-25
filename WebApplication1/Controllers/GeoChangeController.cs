@@ -129,13 +129,20 @@ namespace WebApplication1.Controllers
                     return NotFound($"GeoChange with ID {id} was not found.");
                 }
 
+                // Ensure that users can only delete their own messages
+                var userId = _userManager.GetUserId(User);
+                if (geoChange.UserId != userId && !User.IsInRole("Saksbehandler"))
+                {
+                    return Forbid();
+                }
+
                 _context.GeoChanges.Remove(geoChange);
                 _context.SaveChanges();
 
                 _logger.LogInformation($"GeoChange with ID {id} was deleted.");
                 if (source == "MineInnmeldinger")
                 {
-                    return RedirectToAction("MineInnmeldinger", "Home");
+                    return RedirectToAction("MineInnmeldinger", "GeoChange");
                 }
                 else
                 {
@@ -150,55 +157,70 @@ namespace WebApplication1.Controllers
         }
 
 
+
         [HttpGet]
-        public IActionResult Edit(int id)
+        [Authorize(Roles = "User, Saksbehandler")]
+        public async Task<IActionResult> Edit(int id)
         {
-            var geoChange = _context.GeoChanges.Find(id);
+            var geoChange = await _context.GeoChanges.FindAsync(id);
             if (geoChange == null)
             {
                 return NotFound();
             }
 
-            var statusOptions = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Innsendt", Text = "Innsendt" },
-                new SelectListItem { Value = "Under behandling", Text = "Under behandling" },
-                new SelectListItem { Value = "Godkjent", Text = "Godkjent" }
-            };
+            var user = await _userManager.GetUserAsync(User);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            ViewBag.StatusOptions = new SelectList(statusOptions, "Value", "Text", geoChange.Status);
+            var isSaksbehandler = roles.Contains("Saksbehandler");
+            var isUser = roles.Contains("User");
+
+            ViewBag.CanEditStatus = isSaksbehandler; // Saksbehandler can edit Status
+            ViewBag.CanEditDescription = isUser; // User can edit Description
+
             return View(geoChange);
         }
 
+
         [HttpPost]
-        public IActionResult Edit(int id, GeoChange updatedGeoChange, string source = null)
+        public async Task<IActionResult> Edit(int id, GeoChange updatedGeoChange)
         {
             if (!ModelState.IsValid)
             {
-                ViewData["Source"] = source;
-                return View("EditInnmeldingInfo_SaksBehandler", updatedGeoChange);
+                return View(updatedGeoChange);
             }
 
-            var geoChange = _context.GeoChanges.FirstOrDefault(g => g.Id == id);
+            var geoChange = await _context.GeoChanges.FindAsync(id);
             if (geoChange == null)
             {
                 return NotFound();
             }
 
-            geoChange.GeoJson = updatedGeoChange.GeoJson;
-            geoChange.Description = updatedGeoChange.Description;
-            geoChange.Status = updatedGeoChange.Status;
+            var user = await _userManager.GetUserAsync(User);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            _context.SaveChanges();
+            var isSaksbehandler = roles.Contains("Saksbehandler");
+            var isUser = roles.Contains("User");
 
-            if (source == "MineInnmeldinger")
+            if (isUser)
             {
-                return RedirectToAction("MineInnmeldinger");
+                // User can only edit the GeoJson and Description, but not Status
+                geoChange.GeoJson = updatedGeoChange.GeoJson;
+                geoChange.Description = updatedGeoChange.Description;
+            }
+            else if (isSaksbehandler)
+            {
+                // Saksbehandler can edit everything, including Status
+                geoChange.GeoJson = updatedGeoChange.GeoJson;
+                geoChange.Description = updatedGeoChange.Description;
+                geoChange.Status = updatedGeoChange.Status;
             }
             else
             {
-                return RedirectToAction("SaksBehandlerOversikt");
+                return Forbid();
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("MineInnmeldinger", "GeoChange");
         }
 
         // GET: Edit GeoChange information for Saksbehandler
@@ -231,5 +253,31 @@ namespace WebApplication1.Controllers
             ViewData["Source"] = source;
             return View("DetailsInnmeldingSaksbehandler", geoChange);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public IActionResult MineInnmeldinger()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not logged in"); // Ensure user is authenticated
+            }
+
+            var innmeldinger = _context.GeoChanges
+                .Where(g => g.UserId == userId) // Only fetch messages for the logged-in user
+                .Select(g => new Innmelding
+                {
+                    Id = g.Id,
+                    Registreringsdato = g.Registreringsdato ?? DateTime.Now,
+                    Beskrivelse = g.Description ?? "No description available",
+                    Status = g.Status
+                })
+                .ToList();
+
+            return View(innmeldinger); // Return the user's messages
+        }
+
     }
 }
